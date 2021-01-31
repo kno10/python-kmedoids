@@ -1,0 +1,40 @@
+[package]
+edition = "2018"
+name = "kmedoids"
+version = "0.1.5"
+authors = ["Erich Schubert <erich.schubert@tu-dortmund.de>"]
+description = "k-Medoids clustering with the FasterPAM algorithm"
+homepage = "https://github.com/kno10/python-kmedoids"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/kno10/python-kmedoids"
+
+[lib]
+name = "kmedoids"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustkmedoids = { version = "0.1.5", package = "kmedoids" }
+numpy = "0.13"
+ndarray = "0.14"
+rand = "0.8"
+
+[dependencies.pyo3]
+version = "0.13.1"
+features = ["extension-module"]
+
+[package.metadata.maturin]
+classifier = [
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Programming Language :: Python",
+        "Programming Language :: Rust",
+        "Operating System :: POSIX",
+        "Operating System :: MacOS",
+        "Operating System :: Microsoft :: Windows",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Software Development :: Libraries"
+]
+requires-dist = ["numpy"]
+
