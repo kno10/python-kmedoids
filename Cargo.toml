@@ -1,7 +1,7 @@
 [package]
 edition = "2018"
 name = "kmedoids"
-version = "0.1.5-dev"
+version = "0.1.6"
 authors = ["Erich Schubert <erich.schubert@tu-dortmund.de>"]
 description = "k-Medoids clustering with the FasterPAM algorithm"
 homepage = "https://github.com/kno10/python-kmedoids"
@@ -14,13 +14,13 @@ name = "kmedoids"
 crate-type = ["cdylib"]
 
 [dependencies]
-rustkmedoids = { version = "0.1.5", package = "kmedoids" }
-numpy = "0.13"
-ndarray = "0.14"
+rustkmedoids = { version = "0.1.6", package = "kmedoids" }
+numpy = "0.14"
+ndarray = "0.15"
 rand = "0.8"
 
 [dependencies.pyo3]
-version = "0.13.1"
+version = "0.14.4"
 features = ["extension-module"]
 
 [package.metadata.maturin]

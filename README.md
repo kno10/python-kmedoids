@@ -8,8 +8,8 @@ For further details on the implemented algorithm FasterPAM, see:
 > Erich Schubert, Peter J. Rousseeuw  
 > **Fast and Eager k-Medoids Clustering:**  
 > **O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms**  
-> Under review at Information Systems, Elsevier.  
-> Preprint: <https://arxiv.org/abs/2008.05171>
+> Information Systems (101), 2021, 101804  
+> <https://doi.org/10.1016/j.is.2021.101804> (open access)
 
 an earlier (slower, and now obsolete) version was published as:
 
