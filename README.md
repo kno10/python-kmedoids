@@ -28,7 +28,7 @@ If you use this code in scientific work, please cite above papers. Thank you.
 
 ```
 import kmedoids
-c = kmedoids.fasterpam(data, 5)
+c = kmedoids.fasterpam(distmatrix, 5)
 print("Loss is:", c.loss)
 ```
 
@@ -37,7 +37,7 @@ print("Loss is:", c.loss)
 * **FasterPAM** (Schubert and Rousseeuw, 2020, 2021)
 * FastPAM1 (Schubert and Rousseeuw, 2019, 2021)
 * PAM (Kaufman and Rousseeuw, 1987) with BUILD and SWAP
-* Alternatig (k-means-style approach)
+* Alternating (k-means-style approach)
 
 Note that the k-means style "alternating" algorithm yields rather poor result quality.
 

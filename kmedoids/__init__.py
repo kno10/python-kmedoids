@@ -9,33 +9,34 @@ in decreasing order of performance:
 - Alternating (k-means style algorithm, yields results of lower quality)
 - BUILD (the initialization of PAM)
 
-References
-----------
-Erich Schubert, Peter J. Rousseeuw
-Fast and Eager k-Medoids Clustering:
-O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
-Under review at Information Systems, Elsevier.
-Preprint: https://arxiv.org/abs/2008.05171
+References:
 
-Erich Schubert, Peter J. Rousseeuw:
-Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms
-In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.
-https://doi.org/10.1007/978-3-030-32047-8_16
-Preprint: https://arxiv.org/abs/1810.05691
+| Erich Schubert, Peter J. Rousseeuw
+| Fast and Eager k-Medoids Clustering:
+| O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
+| Information Systems (101), 2021, 101804  
+| <https://doi.org/10.1016/j.is.2021.101804> (open access)
 
-Leonard Kaufman, Peter J. Rousseeuw:
-Clustering by means of medoids.
-In: Dodge Y (ed) Statistical Data Analysis Based on the L 1 Norm and Related Methods, 405-416, 1987
+| Erich Schubert, Peter J. Rousseeuw:
+| Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms
+| In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.
+| https://doi.org/10.1007/978-3-030-32047-8_16
+| Preprint: https://arxiv.org/abs/1810.05691
 
-Leonard Kaufman, Peter J. Rousseeuw:
-Finding Groups in Data: An Introduction to Cluster Analysis.
-John Wiley&Sons, 1990, https://doi.org/10.1002/9780470316801
+| Leonard Kaufman, Peter J. Rousseeuw:
+| Clustering by means of medoids.
+| In: Dodge Y (ed) Statistical Data Analysis Based on the L 1 Norm and Related Methods, 405-416, 1987
+
+| Leonard Kaufman, Peter J. Rousseeuw:
+| Finding Groups in Data: An Introduction to Cluster Analysis.
+| John Wiley&Sons, 1990, https://doi.org/10.1002/9780470316801
 """
 __all__ = [
 	"pam",
-	"fastpam",
+	"fastpam1",
 	"fasterpam",
 	"alternating",
+	"pam_build",
 	"KMedoidsResult"
 ]
 from .kmedoids import KMedoidsResult
@@ -68,19 +69,19 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None):
 	performs any swap found, and contains the O(k) improvement to find
 	the best swaps faster.
 
-	References
-	----------
-	Erich Schubert, Peter J. Rousseeuw
-	Fast and Eager k-Medoids Clustering:
-	O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
-	Under review at Information Systems, Elsevier.
-	Preprint: https://arxiv.org/abs/2008.05171
+	References:
 
-	Erich Schubert, Peter J. Rousseeuw:
-	Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms
-	In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.
-	https://doi.org/10.1007/978-3-030-32047-8_16
-	Preprint: https://arxiv.org/abs/1810.05691
+	| Erich Schubert, Peter J. Rousseeuw
+	| Fast and Eager k-Medoids Clustering:
+	| O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
+	| Information Systems (101), 2021, 101804  
+	| <https://doi.org/10.1016/j.is.2021.101804> (open access)
+
+	| Erich Schubert, Peter J. Rousseeuw:
+	| Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms
+	| In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.
+	| https://doi.org/10.1007/978-3-030-32047-8_16
+	| Preprint: https://arxiv.org/abs/1810.05691
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
@@ -123,19 +124,19 @@ def fastpam1(diss, medoids, max_iter=100, init="random", random_state=None):
 	same swaps as the original PAM (given the same starting conditions),
 	but finds the best swap O(k) times faster.
 
-	References
-	----------
-	Erich Schubert, Peter J. Rousseeuw
-	Fast and Eager k-Medoids Clustering:
-	O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
-	Under review at Information Systems, Elsevier.
-	Preprint: https://arxiv.org/abs/2008.05171
+	References:
 
-	Erich Schubert, Peter J. Rousseeuw:
-	Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms
-	In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.
-	https://doi.org/10.1007/978-3-030-32047-8_16
-	Preprint: https://arxiv.org/abs/1810.05691
+	| Erich Schubert, Peter J. Rousseeuw
+	| Fast and Eager k-Medoids Clustering:
+	| O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
+	| Information Systems (101), 2021, 101804  
+	| <https://doi.org/10.1016/j.is.2021.101804> (open access)
+
+	| Erich Schubert, Peter J. Rousseeuw:
+	| Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms
+	| In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.
+	| https://doi.org/10.1007/978-3-030-32047-8_16
+	| Preprint: https://arxiv.org/abs/1810.05691
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
@@ -177,15 +178,15 @@ def pam_build(diss, k):
 	This is an implementation of the original PAM (Partitioning Around Medoids)
 	clustering algorithm. For improved versions, see the fastpam and fasterpam methods.
 
-	References
-	----------
-	Leonard Kaufman, Peter J. Rousseeuw:
-	Clustering by means of medoids.
-	In: Dodge Y (ed) Statistical Data Analysis Based on the L 1 Norm and Related Methods, 405-416, 1987
+	References:
 
-	Leonard Kaufman, Peter J. Rousseeuw:
-	Finding Groups in Data: An Introduction to Cluster Analysis.
-	John Wiley&Sons, 1990, https://doi.org/10.1002/9780470316801
+	| Leonard Kaufman, Peter J. Rousseeuw:
+	| Clustering by means of medoids.
+	| In: Dodge Y (ed) Statistical Data Analysis Based on the L 1 Norm and Related Methods, 405-416, 1987
+
+	| Leonard Kaufman, Peter J. Rousseeuw:
+	| Finding Groups in Data: An Introduction to Cluster Analysis.
+	| John Wiley&Sons, 1990, https://doi.org/10.1002/9780470316801
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
@@ -219,15 +220,15 @@ def pam(diss, medoids, max_iter=100, init="build", random_state=None):
 	This is an implementation of the original PAM (Partitioning Around Medoids)
 	clustering algorithm. For improved versions, see the fastpam and fasterpam methods.
 
-	References
-	----------
-	Leonard Kaufman, Peter J. Rousseeuw:
-	Clustering by means of medoids.
-	In: Dodge Y (ed) Statistical Data Analysis Based on the L 1 Norm and Related Methods, pp 405–416, 1987
+	References:
 
-	Leonard Kaufman, Peter J. Rousseeuw:
-	Finding Groups in Data: An Introduction to Cluster Analysis.
-	John Wiley&Sons, 1990, https://doi.org/10.1002/9780470316801
+	| Leonard Kaufman, Peter J. Rousseeuw:
+	| Clustering by means of medoids.
+	| In: Dodge Y (ed) Statistical Data Analysis Based on the L 1 Norm and Related Methods, pp 405–416, 1987
+
+	| Leonard Kaufman, Peter J. Rousseeuw:
+	| Finding Groups in Data: An Introduction to Cluster Analysis.
+	| John Wiley&Sons, 1990, https://doi.org/10.1002/9780470316801
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
