@@ -37,9 +37,9 @@ print("Loss is:", c.loss)
 * **FasterPAM** (Schubert and Rousseeuw, 2020, 2021)
 * FastPAM1 (Schubert and Rousseeuw, 2019, 2021)
 * PAM (Kaufman and Rousseeuw, 1987) with BUILD and SWAP
-* Alternating (k-means-style approach)
+* Alternating optimization (k-means-style algorithm)
 
-Note that the k-means style "alternating" algorithm yields rather poor result quality.
+Note that the k-means-like algorithm tends to find much worse solutions.
 
 ## License: GPL-3 or later
 
