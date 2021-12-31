@@ -8,6 +8,7 @@ in decreasing order of performance:
 - PAM (the original Partitioning Around Medoids algorithm)
 - Alternating (k-means style algorithm, yields results of lower quality)
 - BUILD (the initialization of PAM)
+- Silhouette evaluation
 
 References:
 
@@ -30,6 +31,11 @@ References:
 | Leonard Kaufman, Peter J. Rousseeuw:
 | Finding Groups in Data: An Introduction to Cluster Analysis.
 | John Wiley&Sons, 1990, https://doi.org/10.1002/9780470316801
+
+| Peter J. Rousseeuw:
+| Silhouettes: A graphical aid to the interpretation and validation of cluster analysis
+| Journal of Computational and Applied Mathematics, Volume 20, 1987
+| https://doi.org/10.1016/0377-0427(87)90125-7
 """
 __all__ = [
 	"pam",
@@ -37,6 +43,7 @@ __all__ = [
 	"fasterpam",
 	"alternating",
 	"pam_build",
+	"silhouette",
 	"KMedoidsResult"
 ]
 
@@ -329,5 +336,51 @@ def alternating(diss, medoids, max_iter=100, init="random", random_state=None):
 			return KMedoidsResult(*_alternating_i32(diss, medoids.astype(np.uint64), max_iter))
 		elif dtype == np.int64:
 			return KMedoidsResult(*_alternating_i64(diss, medoids.astype(np.uint64), max_iter))
+	raise ValueError("Input data not supported. Use a numpy array of floats.")
+
+def silhouette(diss, labels, samples=False):
+	"""Silhouette index for cluster evaluation.
+
+	The Silhouette, proposed by Peter Rousseeuw in 1987, is a popular
+	internal evaluation measure for clusterings. Although it is defined on
+	arbitary metrics, it is most appropriate for evaluating "spherical"
+	clusters, as it expects objects to be closer to all members of its own
+	cluster than to members of other clusters.
+
+	References:
+
+	| Peter J. Rousseeuw:
+	| Silhouettes: A graphical aid to the interpretation and validation of cluster analysis
+	| Journal of Computational and Applied Mathematics, Volume 20, 1987
+	| https://doi.org/10.1016/0377-0427(87)90125-7
+
+	:param diss: square numpy array of dissimilarities
+	:type diss: ndarray
+	:param labels: cluster labels (use 0 to k-1, no negative values allowed)
+	:type labels: ndarray of int
+	:param samples: whether to return individual samples or not
+	:type samples: boolean
+
+	:return: tuple containing the overall silhouette and the individual samples
+	:rtype: (float, ndarray)
+	"""
+	import numpy as np
+	from .kmedoids import _silhouette_i32, _silhouette_f32, _silhouette_f64
+
+	if not isinstance(diss, np.ndarray):
+		diss = np.array(diss)
+	if not isinstance(labels, np.ndarray):
+		labels = np.array(labels, dtype=np.uint)
+
+	if isinstance(diss, np.ndarray):
+		dtype = diss.dtype
+		if dtype == np.float32:
+			return _silhouette_f32(diss, labels.astype(np.uint64), samples)
+		elif dtype == np.float64:
+			return _silhouette_f64(diss, labels.astype(np.uint64), samples)
+		elif dtype == np.int32:
+			return _silhouette_i32(diss, labels.astype(np.uint64), samples)
+		elif dtype == np.int64:
+			raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
