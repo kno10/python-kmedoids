@@ -97,7 +97,7 @@ def _check_medoids(diss, medoids, init, random_state):
 		return random_state.randint(0, diss.shape[0], medoids)
 	raise ValueError("Specify the number of medoids, or give a numpy array of initial medoids")
 
-def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None):
+def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_cpu=-1):
 	"""FasterPAM k-medoids clustering
 
 	This is an accelerated version of PAM clustering, that eagerly
@@ -126,14 +126,18 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None):
 	:type max_iter: int
 	:param init: initialization method
 	:type init: str, "random", "first" or "build"
-	:param random_state: random seed if no medoids are given
+	:param random_state: random seed (also used for shuffling the processing order)
 	:type random_state: int, RandomState instance or None
+	:param n_cpu: number of threads to use (-1: automatic)
+	:type n_cpu: int
 
 	:return: k-medoids clustering result
 	:rtype: KMedoidsResult
 	"""
-	import numpy as np
+	import numpy as np, numbers, os
 	from .kmedoids import _fasterpam_i32, _fasterpam_i64, _fasterpam_f32, _fasterpam_f64
+	from .kmedoids import _rand_fasterpam_i32, _rand_fasterpam_i64, _rand_fasterpam_f32, _rand_fasterpam_f64
+	from .kmedoids import _par_fasterpam_i32, _par_fasterpam_i64, _par_fasterpam_f32, _par_fasterpam_f64
 
 	if not isinstance(diss, np.ndarray):
 		diss = np.array(diss)
@@ -142,14 +146,55 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None):
 
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
-		if dtype == np.float32:
-			return KMedoidsResult(*_fasterpam_f32(diss, medoids.astype(np.uint64), max_iter))
-		elif dtype == np.float64:
-			return KMedoidsResult(*_fasterpam_f64(diss, medoids.astype(np.uint64), max_iter))
-		elif dtype == np.int32:
-			return KMedoidsResult(*_fasterpam_i32(diss, medoids.astype(np.uint64), max_iter))
-		elif dtype == np.int64:
-			return KMedoidsResult(*_fasterpam_i64(diss, medoids.astype(np.uint64), max_iter))
+		if n_cpu == -1 and diss.shape[0] < 1000: n_cpu = 1
+		if n_cpu == -1 and os.cpu_count() is not None: n_cpu = os.cpu_count()
+		if n_cpu == -1: n_cpu = 1
+		assert n_cpu > 0
+		if n_cpu > 1:
+			seed = None
+			if random_state is None or random_state is np.random:
+				seed = random.mtrand._rand.randint(0)
+			elif isinstance(random_state, numbers.Integral):
+				seed = int(random_state)
+			elif isinstance(random_state, np.random.RandomState):
+				seed = random_state.randint(0)
+			else:
+				raise ValueError("Pass a numpy random generator, state or integer seed")
+			if dtype == np.float32:
+				return KMedoidsResult(*_par_fasterpam_f32(diss, medoids.astype(np.uint64), max_iter, seed, n_cpu))
+			elif dtype == np.float64:
+				return KMedoidsResult(*_par_fasterpam_f64(diss, medoids.astype(np.uint64), max_iter, seed, n_cpu))
+			elif dtype == np.int32:
+				return KMedoidsResult(*_par_fasterpam_i32(diss, medoids.astype(np.uint64), max_iter, seed, n_cpu))
+			elif dtype == np.int64:
+				return KMedoidsResult(*_par_fasterpam_i64(diss, medoids.astype(np.uint64), max_iter, seed, n_cpu))
+		elif random_state is None:
+			if dtype == np.float32:
+				return KMedoidsResult(*_fasterpam_f32(diss, medoids.astype(np.uint64), max_iter))
+			elif dtype == np.float64:
+				return KMedoidsResult(*_fasterpam_f64(diss, medoids.astype(np.uint64), max_iter))
+			elif dtype == np.int32:
+				return KMedoidsResult(*_fasterpam_i32(diss, medoids.astype(np.uint64), max_iter))
+			elif dtype == np.int64:
+				return KMedoidsResult(*_fasterpam_i64(diss, medoids.astype(np.uint64), max_iter))
+		else:
+			seed = None
+			if random_state is np.random:
+				seed = random.mtrand._rand.randint(0)
+			elif isinstance(random_state, numbers.Integral):
+				seed = int(random_state)
+			elif isinstance(random_state, np.random.RandomState):
+				seed = random_state.randint(0)
+			else:
+				raise ValueError("Pass a numpy random generator, state or integer seed")
+			if dtype == np.float32:
+				return KMedoidsResult(*_rand_fasterpam_f32(diss, medoids.astype(np.uint64), max_iter, seed))
+			elif dtype == np.float64:
+				return KMedoidsResult(*_rand_fasterpam_f64(diss, medoids.astype(np.uint64), max_iter, seed))
+			elif dtype == np.int32:
+				return KMedoidsResult(*_rand_fasterpam_i32(diss, medoids.astype(np.uint64), max_iter, seed))
+			elif dtype == np.int64:
+				return KMedoidsResult(*_rand_fasterpam_i64(diss, medoids.astype(np.uint64), max_iter, seed))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def fastpam1(diss, medoids, max_iter=100, init="random", random_state=None):
@@ -338,7 +383,7 @@ def alternating(diss, medoids, max_iter=100, init="random", random_state=None):
 			return KMedoidsResult(*_alternating_i64(diss, medoids.astype(np.uint64), max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
-def silhouette(diss, labels, samples=False):
+def silhouette(diss, labels, samples=False, n_cpu=-1):
 	"""Silhouette index for cluster evaluation.
 
 	The Silhouette, proposed by Peter Rousseeuw in 1987, is a popular
@@ -360,12 +405,15 @@ def silhouette(diss, labels, samples=False):
 	:type labels: ndarray of int
 	:param samples: whether to return individual samples or not
 	:type samples: boolean
+	:param n_cpu: number of threads to use (-1: automatic)
+	:type n_cpu: int
 
 	:return: tuple containing the overall silhouette and the individual samples
 	:rtype: (float, ndarray)
 	"""
-	import numpy as np
+	import numpy as np, os
 	from .kmedoids import _silhouette_i32, _silhouette_f32, _silhouette_f64
+	from .kmedoids import _par_silhouette_i32, _par_silhouette_f32, _par_silhouette_f64
 
 	if not isinstance(diss, np.ndarray):
 		diss = np.array(diss)
@@ -374,13 +422,27 @@ def silhouette(diss, labels, samples=False):
 
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
-		if dtype == np.float32:
-			return _silhouette_f32(diss, labels.astype(np.uint64), samples)
-		elif dtype == np.float64:
-			return _silhouette_f64(diss, labels.astype(np.uint64), samples)
-		elif dtype == np.int32:
-			return _silhouette_i32(diss, labels.astype(np.uint64), samples)
-		elif dtype == np.int64:
-			raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
+		if n_cpu == -1 and samples: n_cpu = 1
+		if n_cpu == -1: n_cpu = os.cpu_count() or 1
+		assert n_cpu > 0
+		if n_cpu > 1:
+			assert not samples, "samples=true currently may only be used with n_cpu=1"
+			if dtype == np.float32:
+				return _par_silhouette_f32(diss, labels.astype(np.uint64), n_cpu)
+			elif dtype == np.float64:
+				return _par_silhouette_f64(diss, labels.astype(np.uint64), n_cpu)
+			elif dtype == np.int32:
+				return _par_silhouette_i32(diss, labels.astype(np.uint64), n_cpu)
+			elif dtype == np.int64:
+				raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
+		else:
+			if dtype == np.float32:
+				return _silhouette_f32(diss, labels.astype(np.uint64), samples)
+			elif dtype == np.float64:
+				return _silhouette_f64(diss, labels.astype(np.uint64), samples)
+			elif dtype == np.int32:
+				return _silhouette_i32(diss, labels.astype(np.uint64), samples)
+			elif dtype == np.int64:
+				raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
