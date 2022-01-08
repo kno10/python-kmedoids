@@ -14,7 +14,7 @@ name = "kmedoids"
 crate-type = ["cdylib"]
 
 [dependencies]
-rustkmedoids = { version = "0.2.0", package = "kmedoids" }
+rustkmedoids = { version = "0.2.0", package = "kmedoids", git = "https://github.com/kno10/rust-kmedoids" }
 numpy = "0.15"
 ndarray = "0.15"
 rand = "0.8"
