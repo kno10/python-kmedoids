@@ -34,6 +34,7 @@ Implemented Algorithms
 * :ref:`PAM<pam>` (Kaufman and Rousseeuw, 1987) with BUILD and SWAP
 * :ref:`Alternating<alternating>` (k-means-style approach)
 * :ref:`BUILD<build>` (Kaufman and Rousseeuw, 1987)
+* :ref:`Silhouette<silhouette>` (Kaufman and Rousseeuw, 1987)
 
 Note that the k-means style "alternating" algorithm yields rather poor result quality.
 
@@ -72,39 +73,19 @@ PAM BUILD
 
 .. autofunction:: pam_build
 
+.. _Silhouette:
+
+Silhouette
+=========
+
+.. autofunction:: silhouette
+
 .. _KMedoidsResult:
 
 k-Medoids result object
 =======================
 
-KMedoids clustering result
-
-.. py:class:: KMedoidsResult
-
-   .. py:attribute:: loss
-      :type: float
-
-      Loss of this clustering (sum of deviations)
-
-   .. py:attribute:: labels
-      :type: ndarray
-
-      Cluster assignment
-
-   .. py:attribute:: medoids
-      :type: ndarray
-
-      Chosen medoid indexes
-
-   .. py:attribute:: n_iter
-      :type: int
-
-      Number of iterations
-
-   .. py:attribute:: n_swap
-      :type: int
-
-      Number of swaps performed
+.. autoclass:: KMedoidsResult
 
 .. _References:
 

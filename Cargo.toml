@@ -2,7 +2,7 @@
 edition = "2021"
 name = "kmedoids"
 version = "0.2.0"
-authors = ["Erich Schubert <erich.schubert@tu-dortmund.de>"]
+authors = ["Erich Schubert <erich.schubert@tu-dortmund.de>", "Lars Lenssen <lars.lenssen@tu-dortmund.de>"]
 description = "k-Medoids clustering with the FasterPAM algorithm"
 homepage = "https://github.com/kno10/python-kmedoids"
 readme = "README.md"
@@ -38,4 +38,4 @@ classifier = [
         "Topic :: Software Development :: Libraries"
 ]
 requires-dist = ["numpy"]
-
+project-url = { "ReadTheDocs" = "https://python-kmedoids.readthedocs.io/", "Rust Source Code" = "https://github.com/kno10/rust-kmedoids" }
