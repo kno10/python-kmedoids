@@ -24,6 +24,11 @@ The [Rust version](https://github.com/kno10/rust-kmedoids) is then wrapped for u
 
 If you use this code in scientific work, please cite above papers. Thank you.
 
+## Documentation
+
+Full python documentation is included, and available on
+[python-kmedoids.readthedocs.io](https://python-kmedoids.readthedocs.io/en/latest/)
+
 ## Example
 
 ```
