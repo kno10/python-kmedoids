@@ -1,11 +1,11 @@
 ---
-title: 'Fast k-Medoids Clustering with FasterPAM in Rust and Python'
+title: 'Fast k-medoids Clustering in Rust and Python'
 tags:
 - k-Medoids
 - Clustering
 - Rust
 - Python
-date: "20.1.2022"
+date: "2022-01-25"
 output: pdf_document
 authors:
 - name: Erich Schubert
@@ -15,8 +15,6 @@ authors:
   orcid: 0000-0003-0037-0418
   affiliation: 1
 bibliography: rust-kmedoids.bib
-aas-doi: 10.3847/xxxxx
-aas-journal: JOSS
 affiliations:
 - name: TU Dortmund University, Informatik VIII, 44221 Dortmund, Germany
   index: 1
@@ -29,8 +27,8 @@ functions or similarities is k-medoids.
 The k-medoids problem is NP-hard [@Kariv/Hakimi/79a], hence we need an approximate solution.
 The standard algorithm for this is Partioning Around Medoids [PAM, @Kaufman/Rousseeuw/87a; -@Kaufman/Rousseeuw/90b],
 consisting of a greedy initialization (BUILD) followed by a local optimization (SWAP).
-Alternatively, a k-means-style alternating optimization can be employed [@DBLP:journals/ibmsj/Maranzana63; -@DBLP:journals/eswa/ParkJ09],
-but this tends to produce worse results [@DBLP:journals/ior/TeitzB68; -@journals/geoana/Rosing79; -@DBLP:journals/jmma/ReynoldsRIR06].
+Alternatively, a k-means-style alternating optimization can be employed [@DBLP:journals/ibmsj/Maranzana63; @DBLP:journals/eswa/ParkJ09],
+but this tends to produce worse results [@DBLP:journals/ior/TeitzB68; @journals/geoana/Rosing79; @DBLP:journals/jmma/ReynoldsRIR06].
 
 FasterPAM [@DBLP:conf/sisap/SchubertR19; -@DBLP:journals/is/SchubertR21] recently introduced a speedup for larger k,
 by exploiting redundancies when computing swaps for all k existing medoids.
