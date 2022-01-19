@@ -82,9 +82,26 @@ Nevertheless, computing the distance matrix clearly needs O(N²) time and memory
 making the algorithm only a good choice for less than 100,000 instances
 (for large data sets, it likely is reasonable to use subsampling).
 
-TODO: experiments. Only report N=10000 as a table implementation/language/runtime/loss?
+We compare our implementation with alternative k-medoids implementations and algorithms: ``sklearn_extra.cluster.KMedoids``  (v0.2.0, https://github.com/scikit-learn-contrib/scikit-learn-extra), ``PyClustering`` [v0.10.1.2, Version @Novikov/2019],  ``biopython`` [@Cock/2009],
+and ``BanditPAM`` [v3.0.2, @Tiwari/2020]. 
 
-TODO: mention BanditPAM only briefly, that it was several times slower, too?
+TODO: Discuss final results for 10k MNIST?
+
+BanditPAM cannot handle precomputed distance matrices, hence we evaluate BanditPAM separately with including of run time for distance computation. For MNIST 5000, 10000, 15000, and 20000 samples BanditPAM was on average 55 times slower than FasterPAM in Rust. Since BanditPAM with its "almost linear run time" [@Tiwari/2020] scales better than FasterPAM with quadratic run time, a break-even point can be estimated to be beyond 500000 samples for MNIST (a size where the memory consumption of the distance matrix makes a stored-distance approach prohibitive to use).
+
+| **implementation** | **algorithm** | **language** | **run time in ns/N²** |  **average loss** |
+|---------|----------------|---------|----------|---------|----------|
+|     ``python-kmedoids``    |   FasterPAM    | Python, Rust |  **5.03**    | 18755553  |
+|     ``ELKI``               |   FasterPAM    | Java         |  17.81       | 18744453  |
+|     ``python-kmedoids``    |   Alternating  | Python, Rust |  **8.43**    | 19238742  |
+|     ``sklearn_extra``      |   Alternating  | Python       |  13.11       | 19238743  |
+|     ``biopython``          |   Alternating  | Python, C    |  20.82       | 19685440  |
+|     ``python-kmedoids``    |   PAM          | Python, Rust |  **144.06**  | 18780640  |
+|     ``sklearn_extra``      |   PAM          | Python       |  1473.87     | 18742544  |
+|     ``PyClustering``       |   PAM          | Python, C++  |  44586.12    | 18781509  |
+
+Table: Results on first 10000 MNIST instances with k = 10.
+
 
 # Benchmark
 
@@ -98,14 +115,6 @@ BanditPAM cannot handle precomputed distance matrices, hence we evaluate BanditP
 The fastest version without parallel processing is the FasterPAM in Rust with 4.48 ns/N². The original Java FasterPAM implementation took 21.04 ns/N², 4 times longer. Also sklearn-extra is slower with 13.61 ns/N², which corresponds to a speedup factor of 3. With 135257 ns/N² is PyClustering almost 30000 times slower, so \autoref{fig:example_mnist} shows only sklearn-extra and FasterPAM with its variants. 
 
 Since BanditPAM cannot process precomputed distance matrices, here we compare the run time of BanditPAM with that of FasterPAM in Rust including the calculation time for the full distance matrix. BanditPAM for MNIST 5000, 10000, 15000, and 20000 samples was on average 55 times slower than FasterPAM in Rust. Since BanditPAM with its "almost linear run time" [@Tiwari/2020] scales better than FasterPAM with quadratic run time, a break-even point can be estimated to be beyond 500000 samples for MNIST (a size where the memory consumption of the distance matrix makes a stored-distance approach prohibitive to use).
-
-| **samples** | **implementation** | **average loss** | **run time in s** |
-|---------|----------------|---------|----------|---------|----------|
-|     5000    |         FasterPAM (Rust) / BanditPAM &nbsp; &nbsp;          |    9365549 / **9361719** &nbsp;     |    **1.48** / 133.19     |
-|     10000   |         FasterPAM (Rust) / BanditPAM &nbsp; &nbsp;          |    **18741470** / 18742086 &nbsp;   |    **3.49** / 190.62     |
-|     15000   |         FasterPAM (Rust) / BanditPAM &nbsp; &nbsp;          |    28283025 / **28261579** &nbsp;   |    **8.21** / 336.29     |
-|     20000   |         FasterPAM (Rust) / BanditPAM &nbsp; &nbsp;          |    37619359 / **37575315** &nbsp;   |    **15.46** / 601.49    |
-
 
 
 # References
