@@ -38,14 +38,14 @@ Here, we introduce ``kmedoids`` Rust crate (https://github.com/kno10/rust-kmedoi
 Python wrapper package ``kmedoids`` (https://github.com/kno10/python-kmedoids) to make this fast
 algorithm easier to employ by researchers in various fields.
 We implemented both the FasterPAM approach, the original PAM, and the Alternating (k-means-style) approach.
-The implementation can be used with arbitrary dissimilarites, as it requires a dissimilarity matrix as input.
+The implementation can be used with arbitrary dissimilarites and distances, as it requires a dissimilarity matrix as input.
 
 We chose Rust for the core functionality because of its high reliability and security as well as performance,
 and a Python wrapper for ease of use. Both parts are documented following community best practice
-and available online at (https://docs.rs/kmedoids/) respectively (https://python-kmedoids.readthedocs.io).
+and available online at https://docs.rs/kmedoids respectively https://python-kmedoids.readthedocs.io .
 We tried to keep library dependencies to a minimum, and some dependencies (e.g., rayon for optional parallelization)
 can be disabled via the Rust "feature" functionality. For efficiency of sharing data from Python to Rust,
-we rely on the well known numpy/ndarray pairing.
+we rely on the well known numpy/ndarray pairing to avoid copying data.
 
 # Performance
 
@@ -54,21 +54,19 @@ It is well known that Java often is not the best choice for a numerically heavy 
 to a large extend due to memory management; but usually still much faster than interpreted Python or R code
 (but which can shine when they are used to drive compiled library code written, e.g., in C, Fortran, or Rust).
 To demonstrate the benefits of this new Rust implementation, we compare it to the original Java version
-(written by the same authors), and the additional speedup that can be obtained by parallelization using multiple threads.
+(written by the same authors), and also study the additional speedup that can be obtained by parallelization using multiple threads.
 
-We run 25 restarts on an AMD EPYC 7302 processor, and evaluate the average values.
 We use the first N instances of the well known MNIST data set.
-As the run times are expected to be quadratic in the number of instances, we report run times normalized by N².
-The Java implementation uses a single thread, whereas for Rust we report up to 16 threads on 16 cores.
+As the run times are expected to be quadratic in the number of instances, we report run times normalized by N²
+averaged over 25 restarts on an AMD EPYC 7302 processor with up to 16 threads for Rust.
 Even without parallelization, the FasterPAM in Rust with 4.48 ns/N², about 4 times less than the original Java FasterPAM implementation with 21.04 ns/N².
 We primarily attribute this to being able to use a better memory layout than currently possible in Java
-(project Valhalla's value types may eventually allow reducing this gap).
+(Project Valhalla's value types may eventually help).
 Using two threads in Rust, we achieve a 34% faster calculation with 2.95 ns/N²,
-but as we further increase the number of threads the gains diminish for this data set size,
-caused by the overhead to partition the computation and synchronize the work.
-It may be possible to further decrease this overhead. For small data sets, using a single
-thread often is beneficial, and the Python wrapper will choose this approach
-by default for small data sets.
+but as we see diminishing returns when further increasing the number of threads for this data set size,
+caused by the overhead and synchronization cost.
+For small data sets, using a single thread appears beneficial, and the Python
+wrapper defaults to this for small data sets.
 
 TODO: refresh figure
 
@@ -76,7 +74,7 @@ TODO: refresh figure
 
 # Comparison of Algorithms
 
-Many existing software libraries for k-medoids only implement the (worse) alternating algorithm, or the (slower) original PAM algorithm.
+Many existing libraries only implement the (worse) alternating algorithm, or the (slower) original PAM algorithm.
 We want to show that using this package makes it easy to find better solutions in less time.
 In practice, it is feasible to run multiple random restarts of FasterPAM, because the run time of the optimization
 is usually smaller than the time needed to compute the (reusable) distance matrix.
