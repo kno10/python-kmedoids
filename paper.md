@@ -82,14 +82,14 @@ Nevertheless, computing the distance matrix clearly needs O(N²) time and memory
 making the algorithm only a good choice for less than 100,000 instances
 (for large data sets, it likely is reasonable to use subsampling).
 
-We compare our implementation with alternative k-medoids implementations and algorithms: ``sklearn_extra.cluster.KMedoids``  (v0.2.0, https://github.com/scikit-learn-contrib/scikit-learn-extra), ``PyClustering`` [v0.10.1.2, Version @Novikov/2019],  ``biopython`` [@Cock/2009],
+We compare our implementation with alternative k-medoids implementations and algorithms: ``sklearn_extra.cluster.KMedoids``  (v0.2.0, https://github.com/scikit-learn-contrib/scikit-learn-extra), ``PyClustering`` [v0.10.1.2, @Novikov/2019],  ``biopython`` [v1.79, @Cock/2009],
 and ``BanditPAM`` [v3.0.2, @Tiwari/2020]. 
 
 TODO: Discuss final results for 10k MNIST?
 
 BanditPAM cannot handle precomputed distance matrices, hence we evaluate BanditPAM separately with including of run time for distance computation. For MNIST 5000, 10000, 15000, and 20000 samples BanditPAM was on average 55 times slower than FasterPAM in Rust. Since BanditPAM with its "almost linear run time" [@Tiwari/2020] scales better than FasterPAM with quadratic run time, a break-even point can be estimated to be beyond 500000 samples for MNIST (a size where the memory consumption of the distance matrix makes a stored-distance approach prohibitive to use).
 
-| **implementation** | **algorithm** | **language** | **run time in ns/N²** |  **average loss** |
+| **implementation** | **algorithm** | **language** | **ns/N²** |  **average loss** |
 |---------|----------------|---------|----------|---------|----------|
 |     ``python-kmedoids``    |   FasterPAM    | Python, Rust |  **5.03**    | 18755553  |
 |     ``ELKI``               |   FasterPAM    | Java         |  17.81       | 18744453  |
