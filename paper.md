@@ -103,19 +103,5 @@ BanditPAM cannot handle precomputed distance matrices, hence we evaluate BanditP
 Table: Results on first 10000 MNIST instances with k = 10.
 
 
-# Benchmark
-
-To benchmark the FasterPAM implementation in Rust, we compare the run time of alternative k-medoids implementations with our Rust implementation.
-k-medoids alternating implementation of ``sklearn_extra.cluster.KMedoids``  (https://github.com/scikit-learn-contrib/scikit-learn-extra) in Python,
-``PyClustering`` [@Novikov/2019] in Python and C++, and
-``BanditPAM`` [@Tiwari/2020] in Python and C++.
-We choose a random initialization and precompute a distance matrix with Euclidean distance (L2 norm).
-BanditPAM cannot handle precomputed distance matrices, hence we evaluate BanditPAM separately with including of run time for distance computation.
-
-The fastest version without parallel processing is the FasterPAM in Rust with 4.48 ns/N². The original Java FasterPAM implementation took 21.04 ns/N², 4 times longer. Also sklearn-extra is slower with 13.61 ns/N², which corresponds to a speedup factor of 3. With 135257 ns/N² is PyClustering almost 30000 times slower, so \autoref{fig:example_mnist} shows only sklearn-extra and FasterPAM with its variants. 
-
-Since BanditPAM cannot process precomputed distance matrices, here we compare the run time of BanditPAM with that of FasterPAM in Rust including the calculation time for the full distance matrix. BanditPAM for MNIST 5000, 10000, 15000, and 20000 samples was on average 55 times slower than FasterPAM in Rust. Since BanditPAM with its "almost linear run time" [@Tiwari/2020] scales better than FasterPAM with quadratic run time, a break-even point can be estimated to be beyond 500000 samples for MNIST (a size where the memory consumption of the distance matrix makes a stored-distance approach prohibitive to use).
-
-
 # References
 
