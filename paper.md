@@ -68,8 +68,6 @@ caused by the overhead and synchronization cost.
 For small data sets, using a single thread appears beneficial, and the Python
 wrapper defaults to this for small data sets.
 
-TODO: refresh figure
-
 ![Results normalized by N² on MNIST data with k=10.\label{fig:example_mnist}](results.png){ width=100% }
 
 # Comparison of Algorithms
@@ -85,20 +83,22 @@ making the algorithm only a good choice for less than 100,000 instances
 We compare our implementation with alternative k-medoids implementations and algorithms: ``sklearn_extra.cluster.KMedoids``  (v0.2.0, https://github.com/scikit-learn-contrib/scikit-learn-extra), ``PyClustering`` [v0.10.1.2, @Novikov/2019],  ``biopython`` [v1.79, @Cock/2009],
 and ``BanditPAM`` [v3.0.2, @Tiwari/2020]. 
 
-TODO: Discuss final results for 10k MNIST?
+We achieve the fastest runtime with python-kmedoids for all algorithms (PAM, Alternating and FasterPAM). As expected, the Alternating algorithm shows a significantly higher loss than PAM and FasterPAM in all implementations. Whereas PAM has a significantly higher run time than FasterPAM and Alternating. FasterPAM achieves a similar loss to PAM at the shortest run time and is implemented most efficiently in the python-kmedoids.
 
 BanditPAM cannot handle precomputed distance matrices, hence we evaluate BanditPAM separately with including of run time for distance computation. For MNIST 5000, 10000, 15000, and 20000 samples BanditPAM was on average 55 times slower than FasterPAM in Rust. Since BanditPAM with its "almost linear run time" [@Tiwari/2020] scales better than FasterPAM with quadratic run time, a break-even point can be estimated to be beyond 500000 samples for MNIST (a size where the memory consumption of the distance matrix makes a stored-distance approach prohibitive to use).
 
 | **implementation** | **algorithm** | **language** | **ns/N²** |  **average loss** |
 |---------|----------------|---------|----------|---------|----------|
-|     ``python-kmedoids``    |   FasterPAM    | Python, Rust |  **5.03**    | 18755553  |
-|     ``ELKI``               |   FasterPAM    | Java         |  17.81       | 18744453  |
-|     ``python-kmedoids``    |   Alternating  | Python, Rust |  **8.43**    | 19238742  |
-|     ``sklearn_extra``      |   Alternating  | Python       |  13.11       | 19238743  |
-|     ``biopython``          |   Alternating  | Python, C    |  20.82       | 19685440  |
-|     ``python-kmedoids``    |   PAM          | Python, Rust |  **144.06**  | 18780640  |
-|     ``sklearn_extra``      |   PAM          | Python       |  1473.87     | 18742544  |
-|     ``PyClustering``       |   PAM          | Python, C++  |  44586.12    | 18781509  |
+|     ``python-kmedoids``    |   FasterPAM    | Python, Rust &nbsp; |  **5.03**    | 18755553  |
+|     ``ELKI``               |   FasterPAM    | Java &nbsp;         |  17.81       | 18744453  |
+|     ``python-kmedoids``    |   Alternating  | Python, Rust &nbsp; |  **8.43**    | 19238742  |
+|     ``ELKI``               |   Alternating  | Java &nbsp;         |  12.80       | 19238868  |
+|     ``sklearn_extra``      |   Alternating  | Python &nbsp;       |  13.11       | 19238743  |
+|     ``biopython``          |   Alternating  | Python, C &nbsp;    |  20.82       | 19685440  |
+|     ``python-kmedoids``    |   PAM          | Python, Rust &nbsp; |  **144.06**  | 18780640  |
+|     ``ELKI``               |   PAM          | Java &nbsp;         |  787.55      | 18764896  |
+|     ``sklearn_extra``      |   PAM          | Python &nbsp;       |  1473.87     | 18742544  |
+|     ``PyClustering``       |   PAM          | Python, C++ &nbsp;  |  44586.12    | 18781509  |
 
 Table: Results on first 10000 MNIST instances with k = 10.
 
