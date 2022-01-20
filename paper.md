@@ -89,16 +89,16 @@ BanditPAM cannot handle precomputed distance matrices, hence we evaluate BanditP
 
 | **implementation** | **algorithm** | **language** | **ns/N²** |  **average loss** |
 |---------|----------------|---------|----------|---------|----------|
-|     ``python-kmedoids``    |   FasterPAM    | Python, Rust &nbsp; |  **5.03**    | 18755553  |
-|     ``ELKI``               |   FasterPAM    | Java &nbsp;         |  17.81       | 18744453  |
-|     ``python-kmedoids``    |   Alternating  | Python, Rust &nbsp; |  **8.43**    | 19238742  |
-|     ``ELKI``               |   Alternating  | Java &nbsp;         |  12.80       | 19238868  |
-|     ``sklearn_extra``      |   Alternating  | Python &nbsp;       |  13.11       | 19238743  |
-|     ``biopython``          |   Alternating  | Python, C &nbsp;    |  20.82       | 19685440  |
-|     ``python-kmedoids``    |   PAM          | Python, Rust &nbsp; |  **144.06**  | 18780640  |
-|     ``ELKI``               |   PAM          | Java &nbsp;         |  787.55      | 18764896  |
-|     ``sklearn_extra``      |   PAM          | Python &nbsp;       |  1473.87     | 18742544  |
-|     ``PyClustering``       |   PAM          | Python, C++ &nbsp;  |  44586.12    | 18781509  |
+|     ``python-kmedoids`` &nbsp;    |   FasterPAM &nbsp;    | Python, Rust &nbsp; |  **5.03**    | 18755553  |
+|     ``ELKI`` &nbsp;               |   FasterPAM &nbsp;    | Java &nbsp;         |  17.81       | 18744453  |
+|     ``python-kmedoids`` &nbsp;    |   Alternating &nbsp;  | Python, Rust &nbsp; |  **8.43**    | 19238742  |
+|     ``ELKI`` &nbsp;               |   Alternating &nbsp;  | Java &nbsp;         |  12.80       | 19238868  |
+|     ``sklearn_extra`` &nbsp;      |   Alternating &nbsp;  | Python &nbsp;       |  13.11       | 19238743  |
+|     ``biopython`` &nbsp;          |   Alternating &nbsp;  | Python, C &nbsp;    |  20.82       | 19685440  |
+|     ``python-kmedoids`` &nbsp;    |   PAM &nbsp;          | Python, Rust &nbsp; |  **144.06**  | 18780640  |
+|     ``ELKI`` &nbsp;               |   PAM &nbsp;          | Java &nbsp;         |  787.55      | 18764896  |
+|     ``sklearn_extra`` &nbsp;      |   PAM &nbsp;          | Python &nbsp;       |  1473.87     | 18742544  |
+|     ``PyClustering`` &nbsp;       |   PAM &nbsp;          | Python, C++ &nbsp;  |  44586.12    | 18781509  |
 
 Table: Results on first 10000 MNIST instances with k = 10.
 
