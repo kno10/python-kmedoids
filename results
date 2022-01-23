@@ -1,0 +1,26 @@
+(10000, 10000) took 1.261960506439209 s
+func=fp k=10 size=10000
+Runtime: min=  653.85 mean= 553.80 ±118.81 ms
+Loss:    min=18725141.42 mean=18755648.63 ±4110.95
+N Iter:  min=    3.00 mean=    3.36 ±0.13
+func=ske k=10 size=10000
+Runtime: min=  733.22 mean= 1344.57 ±42.95 ms
+Loss:    min=18864511.46 mean=19238742.93 ±31246.65
+func=skp k=10 size=10000
+Runtime: min=123623.55 mean=150652.03 ±3487.28 ms
+Loss:    min=18725141.42 mean=18755237.84 ±3373.19
+func=bp k=10 size=10000
+Runtime: min=  787.90 mean= 1368.18 ±48.09 ms
+Loss:    min=19365177.75 mean=19702804.19 ±32187.77
+func=kma k=10 size=10000
+Runtime: min=  480.18 mean=  891.96 ±38.22 ms
+Loss:    min=18864511.46 mean=19238742.93 ±31246.65
+N Iter:  min=    2.00 mean=    4.00 ±0.17
+func=pam k=10 size=10000
+Runtime: min=21188.66 mean=21234.33 ±5.74 ms
+Loss:    min=18780639.54 mean=18780639.54 ±0.00
+N Iter:  min=    7.00 mean=    7.00 ±0.00
+func=pyc k=10 size=10000
+Runtime: min=5800532.14 mean=7695764.80 ±199340.47 ms
+Loss:    min=18736575.93 mean=18753892.10 ±3209.51
+N Iter:  min=   11.00 mean=   14.64 ±0.38
