@@ -109,7 +109,7 @@ Table: Results on first 10000 MNIST instances with k = 10.
 Because BanditPAM cannot handle precomputed distance matrices, we evaluate BanditPAM separately, including the run time for distance computations.
 On average, for MNIST 5000, 10000, 15000, and 20000 samples, BanditPAM was 55 times slower than FasterPAM in Rust.
 While BanditPAM claims "almost linear run time" [@Tiwari/2020], whereas FasterPAM has quadratic run time,
-BanditPAM appears to have substantial overhead,[^1]
+BanditPAM appears to have substantial overhead,^[c.f. bug report https://github.com/ThrunGroup/BanditPAM/issues/175]
 and a break-even point likely is beyond 500000 samples for MNIST
 (a size where the memory consumption of the distance matrix makes a stored-distances approach prohibitive to use).
 
@@ -124,5 +124,3 @@ data scientists in various fields, while the source code helps researchers in
 data mining to further improve clustering algorithms.
 
 # References
-
-[^1] c.f. bug report https://github.com/ThrunGroup/BanditPAM/issues/175
