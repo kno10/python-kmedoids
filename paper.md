@@ -37,22 +37,22 @@ Originally FasterPAM was implemented in Java and published within the open-sourc
 Here, we introduce the ``kmedoids`` Rust crate (https://github.com/kno10/rust-kmedoids) along with a
 Python wrapper package ``kmedoids`` (https://github.com/kno10/python-kmedoids) to make this fast
 algorithm easier to employ by researchers in various fields.
-We implemented the FasterPAM approach, the original PAM, and the Alternating (k-means-style) approach.
+We implemented the FasterPAM approach, the original PAM, and the "Alternating" (k-means-style) approach.
 The implementation can be used with arbitrary dissimilarities and distances, as it requires a dissimilarity matrix as input.
 
 We chose Rust for the core functionality because of its high reliability, security, and performance,
 and a Python wrapper for ease of use. Both parts are documented following community best practice
-and available online at https://docs.rs/kmedoids respectively https://python-kmedoids.readthedocs.io .
+and available online at <https://docs.rs/kmedoids> respectively <https://python-kmedoids.readthedocs.io>.
 We tried to keep library dependencies to a minimum, and some dependencies (e.g., rayon for optional parallelization)
-can be disabled via the Rust "feature" functionality. For efficiency of sharing data from Python to Rust,
+can be disabled via the Rust "feature" functionality. For efficiently sharing data from Python to Rust,
 we rely on the well-known numpy/ndarray pairing to avoid copying data.
 
 # Performance
 
 The original FasterPAM prototype was implemented in Java and made available as part of the ELKI open-source toolkit [@Schubert/Zimek/2019a].
-It is well known that Java often is not the best choice for a numerically heavy computation,
+Java often is not the best choice for a numerically heavy computation,
 to a large extent due to memory management; but it usually is still much faster than interpreted ``pure'' Python or R code
-(but which can shine when used to drive compiled library code written, e.g., in C, Fortran, or Rust).
+(which can shine when used to drive compiled library code written, e.g., in C, Fortran, or Rust).
 To demonstrate the benefits of this new Rust implementation, we compare it to the original Java version
 (written by the same authors), and also study the additional speedup that can be obtained by parallelization using multiple threads.
 
@@ -63,7 +63,7 @@ Even without parallelization, the FasterPAM in Rust with 4.48 ns per N², is abo
 We primarily attribute this to being able to use a better memory layout than currently possible in Java
 (Project Valhalla's value types may eventually help).
 Using two threads in Rust, we achieve a 34% faster calculation with 2.95 ns per N²,
-but as we see diminishing returns when further increasing the number of threads for this data set size,
+but we see diminishing returns when further increasing the number of threads for this data set size,
 caused by the overhead and synchronization cost.
 For small data sets, using a single thread appears beneficial, and the Python
 wrapper defaults to this for small data sets.
@@ -76,7 +76,7 @@ Many existing libraries only implement the (worse) alternating algorithm, or the
 We want to show that using this package makes it easy to find better solutions in less time.
 In practice, it is feasible to run multiple random restarts of FasterPAM, because the run time of the optimization
 is usually smaller than the time needed to compute the (reusable) distance matrix.
-Nevertheless, computing the distance matrix clearly needs O(N²) time and memory,
+Nevertheless, computing the distance matrix needs O(N²) time and memory,
 making the algorithm only a good choice for less than 100,000 instances
 (for large data sets, it likely is reasonable to use subsampling).
 
@@ -87,7 +87,7 @@ We compare our implementation with alternative k-medoids implementations and alg
 and ``BanditPAM`` [v3.0.2, @Tiwari/2020].
 
 Our implementations (via the python wrapper) are the fastest for all algorithms (PAM, Alternating, and FasterPAM).
-As expected, the Alternating algorithm shows a significantly worse loss than PAM and FasterPAM in all implementations;
+As expected, the "Alternating" algorithm shows a significantly worse loss than PAM and FasterPAM in all implementations;
 while PAM has a substantially worse run time than FasterPAM and Alternating.
 FasterPAM achieves a similar loss to PAM (the measured differences are due to random initialization) at the shortest run time.
 
@@ -106,7 +106,7 @@ FasterPAM achieves a similar loss to PAM (the measured differences are due to ra
 
 Table: Results on first 10000 MNIST instances with k = 10.
 
-Because BanditPAM cannot handle precomputed distance matrices, we evaluate BanditPAM separately, including the run time for distance computations.
+Because BanditPAM cannot handle precomputed distance matrices, we evaluate BanditPAM separately, including the run time for the distance computations.
 On average, for MNIST 5000, 10000, 15000, and 20000 samples, BanditPAM was 55 times slower than FasterPAM in Rust.
 While BanditPAM claims "almost linear run time" [@Tiwari/2020], whereas FasterPAM has quadratic run time,
 BanditPAM appears to have substantial overhead,^[c.f. bug report https://github.com/ThrunGroup/BanditPAM/issues/175]
@@ -119,7 +119,7 @@ We provide a fast Rust implementation of the FasterPAM algorithm,
 with optional parallelization, and an easy-to-use Python wrapper.
 K-medoids clustering is a useful clustering algorithm in many domains where
 the input data is not continuous, and where Euclidean distance is not suitable,
-and with these packages we hope to make this algorithm easier accessible to
+and with these packages, we hope to make this algorithm easier accessible to
 data scientists in various fields, while the source code helps researchers in
 data mining to further improve clustering algorithms.
 
