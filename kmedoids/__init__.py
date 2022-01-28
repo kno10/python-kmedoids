@@ -153,11 +153,11 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_c
 		if n_cpu > 1:
 			seed = None
 			if random_state is None or random_state is np.random:
-				seed = np.random.mtrand._rand.randint(0)
+				seed = np.random.mtrand._rand.randint(0, 2147483647)
 			elif isinstance(random_state, numbers.Integral):
 				seed = int(random_state)
 			elif isinstance(random_state, np.random.RandomState):
-				seed = random_state.randint(0)
+				seed = random_state.randint(0, 2147483647)
 			else:
 				raise ValueError("Pass a numpy random generator, state or integer seed")
 			if dtype == np.float32:
@@ -180,11 +180,11 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_c
 		else:
 			seed = None
 			if random_state is np.random:
-				seed = np.random.mtrand._rand.randint(0)
+				seed = np.random.mtrand._rand.randint(0, 2147483647)
 			elif isinstance(random_state, numbers.Integral):
 				seed = int(random_state)
 			elif isinstance(random_state, np.random.RandomState):
-				seed = random_state.randint(0)
+				seed = random_state.randint(0, 2147483647)
 			else:
 				raise ValueError("Pass a numpy random generator, state or integer seed")
 			if dtype == np.float32:

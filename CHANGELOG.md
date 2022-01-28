@@ -2,6 +2,10 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.2.2 (2022-01-28)
+
+- really fix incorrect call to numpy random for seeding
+
 ## kmedoids 0.2.1 (2022-01-28)
 
 - fix incorrect call to numpy random
