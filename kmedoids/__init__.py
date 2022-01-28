@@ -153,7 +153,7 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_c
 		if n_cpu > 1:
 			seed = None
 			if random_state is None or random_state is np.random:
-				seed = random.mtrand._rand.randint(0)
+				seed = np.random.mtrand._rand.randint(0)
 			elif isinstance(random_state, numbers.Integral):
 				seed = int(random_state)
 			elif isinstance(random_state, np.random.RandomState):
@@ -180,7 +180,7 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_c
 		else:
 			seed = None
 			if random_state is np.random:
-				seed = random.mtrand._rand.randint(0)
+				seed = np.random.mtrand._rand.randint(0)
 			elif isinstance(random_state, numbers.Integral):
 				seed = int(random_state)
 			elif isinstance(random_state, np.random.RandomState):

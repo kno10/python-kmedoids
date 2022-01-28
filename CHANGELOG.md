@@ -2,6 +2,10 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.2.1 (2022-01-28)
+
+- fix incorrect call to numpy random
+
 ## kmedoids 0.2.0 (2022-01-07)
 
 - make KMedoidsResult a native Python object, pass a tuple from Rust
