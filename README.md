@@ -29,6 +29,20 @@ If you use this code in scientific work, please cite above papers. Thank you.
 Full python documentation is included, and available on
 [python-kmedoids.readthedocs.io](https://python-kmedoids.readthedocs.io/en/latest/)
 
+## Installation
+
+### Install from source:
+1. Install Rust (https://www.rust-lang.org/)
+2. Clone the kmedoids repository:
+	```
+	git clone https://github.com/kno10/python-kmedoids.git
+	```
+3. Compile kmedoids with `cargo`:
+   ```
+    cd python-kmedoids; cargo build --release
+    ```
+4. Copy and rename the shared library from `./target/release/`: On macOS, rename `kmedoids.dylib` to `kmedoids.so`, on windows `kmedoids.dll` to `kmedoids.pyd` and on linux `libkmedoids.so` to `kmedoids.so`. Then open a python shell in the same folder and you'll be able to `import kmedoids`.
+
 ## Example
 
 ```
