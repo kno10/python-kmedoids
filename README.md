@@ -36,22 +36,16 @@ Full python documentation is included, and available on
 Pre-built packages are on <https://pypi.org/project/kmedoids/> and can be installed with `pip install kmedoids`.
 
 ### Compilation from source
-1. Install Rust (https://www.rust-lang.org/)
-2. Clone the kmedoids repository:
-   ```
-   git clone https://github.com/kno10/python-kmedoids.git
-   ```
-3. Compile kmedoids with `cargo`:
-   ```
-   cd python-kmedoids; cargo build --release
-   ```
-4. Install the compiled library from the `target/release` folder into the `kmedoids` folder. On Linux, you can make a symlink from `kmedoids/kmedoids.so` to `./target/release/libkmedoids.so` (on macOS link to `kmedoids.dylib`, on Windows you probably need to copy and rename `kmedoids.dll` to `kmedoids.pyd`).
+You need to have Rust and Python 3 installed.
+```
+pip install maturin
+git clone https://github.com/kno10/python-kmedoids.git
+cd python-kmedoids; maturin develop --release
+```
 
-This procedure uses the latest git version from <https://github.com/kno10/rust-kmedoids>. If you want to use local modifications to the rust code, you need to provide the source folder of the Rust module in `Cargo.toml`.
-
-### Local installation
-
-TODO: implement some automated `setuptools` based installation.
+This procedure uses the latest git version from <https://github.com/kno10/rust-kmedoids>.
+If you want to use local modifications to the Rust code, you need to provide the source folder of the Rust module in `Cargo.toml`
+by setting the `path=` option of the `kmedoids` dependency.
 
 ## Example
 
