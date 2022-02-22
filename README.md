@@ -33,10 +33,12 @@ Full python documentation is included, and available on
 
 ### Installation with pip
 
-Pre-built packages are on <https://pypi.org/project/kmedoids/> and can be installed with `pip install kmedoids`.
+Pre-built packages are on PyPi <https://pypi.org/project/kmedoids/> and can be installed with `pip install kmedoids`.
 
 ### Compilation from source
 You need to have Rust and Python 3 installed.
+
+Installation uses [maturin](https://github.com/PyO3/maturin#maturin) for compiling and installing Rust extensions.
 ```
 pip install maturin
 git clone https://github.com/kno10/python-kmedoids.git
