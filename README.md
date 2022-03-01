@@ -49,11 +49,16 @@ This procedure uses the latest git version from <https://github.com/kno10/rust-k
 If you want to use local modifications to the Rust code, you need to provide the source folder of the Rust module in `Cargo.toml`
 by setting the `path=` option of the `kmedoids` dependency.
 
-## Example
+## Example: MNIST
 
 ```
-import kmedoids
-c = kmedoids.fasterpam(distmatrix, 5)
+from kmedoids import fasterpam
+import numpy
+from sklearn.datasets import fetch_openml
+from sklearn.metrics.pairwise import euclidean_distances
+X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
+diss = euclidean_distances(X)
+c = fasterpam(diss, 100)
 print("Loss is:", c.loss)
 ```
 
