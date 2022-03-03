@@ -44,6 +44,10 @@ pip install maturin
 git clone https://github.com/kno10/python-kmedoids.git
 cd python-kmedoids; maturin develop --release
 ```
+Integration test to validate the installation.
+```
+python -m unittest discover tests
+```
 
 This procedure uses the latest git version from <https://github.com/kno10/rust-kmedoids>.
 If you want to use local modifications to the Rust code, you need to provide the source folder of the Rust module in `Cargo.toml`
