@@ -39,13 +39,13 @@ Pre-built packages are on PyPi <https://pypi.org/project/kmedoids/> and can be i
 You need to have Rust and Python 3 installed.
 
 Installation uses [maturin](https://github.com/PyO3/maturin#maturin) for compiling and installing Rust extensions.
-```
+```sh
 pip install maturin
 git clone https://github.com/kno10/python-kmedoids.git
 cd python-kmedoids; maturin develop --release
 ```
 Integration test to validate the installation.
-```
+```sh
 python -m unittest discover tests
 ```
 
@@ -55,15 +55,15 @@ by setting the `path=` option of the `kmedoids` dependency.
 
 ## Example
 
-```
+```python
 import kmedoids
 c = kmedoids.fasterpam(distmatrix, 5)
 print("Loss is:", c.loss)
 ```
 
-### Using sklearn syntax
+### Using the sklearn-compatible API
 
-```
+```python
 import kmedoids
 km = kmedoids.KMedoids(5, method='fasterpam')
 c = km.fit(distmatrix)
@@ -72,7 +72,7 @@ print("Loss is:", c.inertia_)
 
 ### MNIST (10k samples)
 
-```
+```python
 import kmedoids
 import numpy
 from sklearn.datasets import fetch_openml
