@@ -17,6 +17,38 @@ If you use this code in scientific work, please cite the papers in the :ref:`Ref
    :maxdepth: 2
    :caption: Contents:
 
+Installation
+============
+
+Installation with pip
+---------------------
+
+Pre-built packages are on PyPi https://pypi.org/project/kmedoids/ and can be installed with `pip install kmedoids`.
+
+Compilation from source
+-----------------------
+
+You need to have Rust and Python 3 installed.
+
+Installation uses
+`maturin <https://github.com/PyO3/maturin#maturin>`_,
+for compiling and installing Rust extensions.
+
+.. code-block:: python
+pip install maturin
+git clone https://github.com/kno10/python-kmedoids.git
+cd python-kmedoids; maturin develop --release
+
+Integration test to validate the installation.
+
+.. code-block:: python
+
+python -m unittest discover tests
+
+This procedure uses the latest git version from https://github.com/kno10/rust-kmedoids.
+If you want to use local modifications to the Rust code, you need to provide the source folder of the Rust module in `Cargo.toml`
+by setting the `path=` option of the `kmedoids` dependency.
+
 Example
 =======
 
@@ -25,6 +57,38 @@ Example
    import kmedoids
    c = kmedoids.fasterpam(distmatrix, 5)
    print("Loss is:", c.loss)
+
+Using sklearn syntax
+-------------------
+
+.. code-block:: python
+
+   import kmedoids
+   km = kmedoids.KMedoids(5, method='fasterpam')
+   c = km.fit(distmatrix)
+   print("Loss is:", c.inertia_)
+
+MNIST (10k samples)
+-------------------
+
+.. code-block:: python
+
+	import kmedoids
+	import numpy
+	from sklearn.datasets import fetch_openml
+	from sklearn.metrics.pairwise import euclidean_distances
+	X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
+	X = X[:10000]
+	diss = euclidean_distances(X)
+	start = time.time()
+	fp = kmedoids.fasterpam(diss, 100)
+	print("FasterPAM took: %.2f ms" % ((time.time() - start)*1000))
+	print("Loss with FasterPAM:", fp.loss)
+	start = time.time()
+	pam = kmedoids.pam(diss, 100)
+	print("PAM took: %.2f ms" % ((time.time() - start)*1000))
+	print("Loss with PAM:", pam.loss)
+
 
 Implemented Algorithms
 ======================
@@ -86,6 +150,13 @@ k-Medoids result object
 =======================
 
 .. autoclass:: KMedoidsResult
+
+.. _KMedoids:
+
+k-Medoids class analog to sklearn.
+=====================================
+
+.. autoclass:: KMedoids
 
 .. _References:
 
