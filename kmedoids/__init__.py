@@ -109,7 +109,7 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_c
 	| Erich Schubert, Peter J. Rousseeuw
 	| Fast and Eager k-Medoids Clustering:
 	| O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
-	| Information Systems (101), 2021, 101804  
+	| Information Systems (101), 2021, 101804
 	| <https://doi.org/10.1016/j.is.2021.101804> (open access)
 
 	| Erich Schubert, Peter J. Rousseeuw:
@@ -209,7 +209,7 @@ def fastpam1(diss, medoids, max_iter=100, init="random", random_state=None):
 	| Erich Schubert, Peter J. Rousseeuw
 	| Fast and Eager k-Medoids Clustering:
 	| O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
-	| Information Systems (101), 2021, 101804  
+	| Information Systems (101), 2021, 101804
 	| <https://doi.org/10.1016/j.is.2021.101804> (open access)
 
 	| Erich Schubert, Peter J. Rousseeuw:
@@ -446,3 +446,94 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 				raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
+
+class KMedoids():
+	"""Provides sklearn base interface
+
+	:param n_clusters: The number of clusters to form
+	:type n_clusters: int
+	:param metric: What distance metric to use.
+	:type metric : string, 'precomputed'
+	:param method: Which algorithm to use.
+	:type method: string, 'fasterpam', 'fastpam1', 'pam' or 'alternate'
+	:param init: initialization method
+	:type init: string, "random", "first" or "build"
+	:param max_iter : Specify the maximum number of iterations when fitting.
+	:type max_iter : int
+	:param random_state: random seed if no medoids are given
+	:type random_state: int, RandomState instance or None
+
+	:attr cluster_centers_ : None for 'precomputed'
+	:type cluster_centers_ : array, None
+	:attr medoid_indices_ : The indices of the medoid rows in X
+	:type medoid_indices_ : array, shape = (n_clusters,)
+	:attr labels_ : Labels of each point
+	:type labels_ : array, shape = (n_samples,)
+	:attr inertia_ : Sum of distances of samples to their closest cluster center.
+	:type inertia_ : float
+	"""
+	def __init__(
+        self,
+        n_clusters=8,
+        metric="precomputed",
+        method="fasterpam",
+        init="random",
+        max_iter=300,
+        random_state=None,
+    ):
+		self.n_clusters = n_clusters
+		self.metric = metric
+		self.method = method
+		self.init = init
+		self.max_iter = max_iter
+		self.random_state = random_state
+
+	def fit(self, X, y=None):
+		"""Fit K-Medoids to the provided data.
+
+		:param X: distance matrix to cluster.
+		:type X: {array-like, sparse matrix}, shape = (n_samples, n_samples)
+		:param y: ignored
+
+		:return self:
+		"""
+		if self.init != "random" and self.init != "first" and self.init != "build":
+			raise ValueError(
+				f"init={self.init} is not supported. Supported inits "
+				f"are 'random', 'first' and 'build'."
+			)
+		if self.metric != "precomputed":
+			raise ValueError(
+				f"metric={self.metric} is not supported. Supported metric "
+				f"is 'precomputed'."
+			)
+		if self.method == "fasterpam":
+			result = fasterpam(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
+		elif self.method == "fastpam1":
+			result = fastpam1(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
+		elif self.method == "pam":
+			result = pam(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
+		elif self.method == "alternate":
+			result = alternating(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
+		else:
+			raise ValueError(
+				f"method={self.method} is not supported. Supported methods "
+				f"are 'fasterpam', 'fastpam1', 'pam' and 'alternate'."
+			)
+		self.labels_ = result.labels
+		self.medoid_indices_ = result.medoids
+		self.inertia_ = float(result.loss)
+		self.cluster_centers_ = None
+		return self
+
+	def predict(self, X):
+		"""Predict the closest cluster for each sample in X.
+
+		:param X: distance matrix to cluster.
+		:type X: {array-like, sparse matrix}, shape = (n_samples, n_samples)
+
+		:return labels: Index of the cluster each sample belongs to.
+		:type labels: array, shape = (n_query,)
+		"""
+		import numpy as np
+		return np.argmin(X[:, self.medoid_indices_], axis=1)
