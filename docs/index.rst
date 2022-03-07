@@ -23,7 +23,7 @@ Installation
 Installation with pip
 ---------------------
 
-Pre-built packages are on PyPi https://pypi.org/project/kmedoids/ and can be installed with `pip install kmedoids`.
+Pre-built packages are on PyPi https://pypi.org/project/kmedoids/ and can be installed with :kbd:`pip install kmedoids`.
 
 Compilation from source
 -----------------------
@@ -35,19 +35,20 @@ Installation uses
 for compiling and installing Rust extensions.
 
 .. code-block:: python
-pip install maturin
-git clone https://github.com/kno10/python-kmedoids.git
-cd python-kmedoids; maturin develop --release
+
+   pip install maturin
+   git clone https://github.com/kno10/python-kmedoids.git
+   cd python-kmedoids; maturin develop --release
 
 Integration test to validate the installation.
 
 .. code-block:: python
 
-python -m unittest discover tests
+   python -m unittest discover tests
 
 This procedure uses the latest git version from https://github.com/kno10/rust-kmedoids.
-If you want to use local modifications to the Rust code, you need to provide the source folder of the Rust module in `Cargo.toml`
-by setting the `path=` option of the `kmedoids` dependency.
+If you want to use local modifications to the Rust code, you need to provide the source folder of the Rust module in :kbd:`Cargo.toml`
+by setting the :kbd:`path=` option of the :kbd:`kmedoids` dependency.
 
 Example
 =======

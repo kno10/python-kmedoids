@@ -61,13 +61,13 @@ c = kmedoids.fasterpam(distmatrix, 5)
 print("Loss is:", c.loss)
 ```
 
-###Using sklearn syntax
+### Using sklearn syntax
 
 ```
-   import kmedoids
-   km = kmedoids.KMedoids(5, method='fasterpam')
-   c = km.fit(distmatrix)
-   print("Loss is:", c.inertia_)
+import kmedoids
+km = kmedoids.KMedoids(5, method='fasterpam')
+c = km.fit(distmatrix)
+print("Loss is:", c.inertia_)
 ```
 
 ### MNIST (10k samples)
