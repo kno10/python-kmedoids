@@ -154,7 +154,7 @@ k-Medoids result object
 
 .. _KMedoids:
 
-k-Medoids class analog to sklearn.
+sklearn-compatible API
 =====================================
 
 .. autoclass:: KMedoids

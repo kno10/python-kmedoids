@@ -448,7 +448,7 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 
 
 class KMedoids():
-	"""Provides sklearn base interface
+	"""Provides sklearn-compatible API.
 
 	:param n_clusters: The number of clusters to form
 	:type n_clusters: int
@@ -463,14 +463,14 @@ class KMedoids():
 	:param random_state: random seed if no medoids are given
 	:type random_state: int, RandomState instance or None
 
-	:attr cluster_centers_ : None for 'precomputed'
-	:type cluster_centers_ : array, None
-	:attr medoid_indices_ : The indices of the medoid rows in X
-	:type medoid_indices_ : array, shape = (n_clusters,)
-	:attr labels_ : Labels of each point
-	:type labels_ : array, shape = (n_samples,)
-	:attr inertia_ : Sum of distances of samples to their closest cluster center.
-	:type inertia_ : float
+	:ivar cluster_centers_: None for 'precomputed'
+	:type cluster_centers_: array, None
+	:ivar medoid_indices_: The indices of the medoid rows in X
+	:type medoid_indices_: array, shape = (n_clusters,)
+	:ivar labels_: Labels of each point
+	:type labels_: array, shape = (n_samples,)
+	:ivar inertia_: Sum of distances of samples to their closest cluster center
+	:type inertia_: float
 	"""
 	def __init__(
         self,
