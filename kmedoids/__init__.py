@@ -569,3 +569,16 @@ class KMedoids(SKLearnClusterer):
 			Y = self.cluster_centers_
 			return pairwise_distances(X, Y=Y, metric=self.metric)
 
+	def fit_predict(self, X, y=None):
+		"""Predict the closest cluster for each sample in X.
+
+		:param X: Input data
+		:type X: array-like of shape (n_samples, n_features)
+		:param y: Not used, present for API consistency by convention
+		:type y: Ignored
+
+		:return: Cluster labels
+		:rtype: ndarray of shape (n_samples,)
+		"""
+		self.fit(X)
+		return self.labels_
