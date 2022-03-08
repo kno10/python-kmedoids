@@ -59,7 +59,7 @@ Example
    c = kmedoids.fasterpam(distmatrix, 5)
    print("Loss is:", c.loss)
 
-Using sklearn syntax
+Using the sklearn-compatible API
 -------------------
 
 .. code-block:: python

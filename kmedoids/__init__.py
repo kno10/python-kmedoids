@@ -452,25 +452,25 @@ class KMedoids():
 
 	:param n_clusters: The number of clusters to form
 	:type n_clusters: int
-	:param metric: What distance metric to use.
-	:type metric : string, 'precomputed'
-	:param method: Which algorithm to use.
+	:param metric: To use anything besides 'precomputed', you need to have sklearn installed.
+	:type metric: string, default: 'precomputed'
+	:param method: Which algorithm to use
 	:type method: string, 'fasterpam', 'fastpam1', 'pam' or 'alternate'
 	:param init: initialization method
 	:type init: string, "random", "first" or "build"
-	:param max_iter : Specify the maximum number of iterations when fitting.
-	:type max_iter : int
+	:param max_iter: Specify the maximum number of iterations when fitting
+	:type max_iter: int
 	:param random_state: random seed if no medoids are given
 	:type random_state: int, RandomState instance or None
 
-	:ivar cluster_centers_: None for 'precomputed'
-	:type cluster_centers_: array, None
-	:ivar medoid_indices_: The indices of the medoid rows in X
-	:type medoid_indices_: array, shape = (n_clusters,)
-	:ivar labels_: Labels of each point
-	:type labels_: array, shape = (n_samples,)
-	:ivar inertia_: Sum of distances of samples to their closest cluster center
-	:type inertia_: float
+	:ivar cluster_centers\_: None for 'precomputed'
+	:type cluster_centers\_: array
+	:ivar medoid_indices\_: The indices of the medoid rows in X
+	:type medoid_indices\_: array, shape = (n_clusters,)
+	:ivar labels\_: Labels of each point
+	:type labels\_: array, shape = (n_samples,)
+	:ivar inertia\_: Sum of distances of samples to their closest cluster center
+	:type inertia\_: float
 	"""
 	def __init__(
         self,
@@ -491,7 +491,7 @@ class KMedoids():
 	def fit(self, X, y=None):
 		"""Fit K-Medoids to the provided data.
 
-		:param X: distance matrix to cluster.
+		:param X: Dataset to cluster
 		:type X: {array-like, sparse matrix}, shape = (n_samples, n_samples)
 		:param y: ignored
 
@@ -502,11 +502,10 @@ class KMedoids():
 				f"init={self.init} is not supported. Supported inits "
 				f"are 'random', 'first' and 'build'."
 			)
+
 		if self.metric != "precomputed":
-			raise ValueError(
-				f"metric={self.metric} is not supported. Supported metric "
-				f"is 'precomputed'."
-			)
+			from sklearn.metrics.pairwise import pairwise_distances
+			X = pairwise_distances(X, metric=self.metric)
 		if self.method == "fasterpam":
 			result = fasterpam(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "fastpam1":
@@ -523,17 +522,32 @@ class KMedoids():
 		self.labels_ = result.labels
 		self.medoid_indices_ = result.medoids
 		self.inertia_ = float(result.loss)
-		self.cluster_centers_ = None
+		if self.metric == "precomputed":
+			self.cluster_centers_ = None
+		else:
+			self.cluster_centers_ = X[result.medoids]
 		return self
 
 	def predict(self, X):
 		"""Predict the closest cluster for each sample in X.
 
-		:param X: distance matrix to cluster.
+		:param X: New data to predict
 		:type X: {array-like, sparse matrix}, shape = (n_samples, n_samples)
 
-		:return labels: Index of the cluster each sample belongs to.
+		:return labels: Index of the cluster each sample belongs to
 		:type labels: array, shape = (n_query,)
 		"""
 		import numpy as np
 		return np.argmin(X[:, self.medoid_indices_], axis=1)
+
+	def fit_predict(self, X):
+		"""Predict the closest cluster for each sample in X.
+
+		:param X: New data to cluster/predict
+		:type X: {array-like, sparse matrix}, shape = (n_samples, n_samples)
+
+		:return labels: Index of the cluster each sample belongs to
+		:type labels: array, shape = (n_query,)
+		"""
+		self.fit(X)
+		return self.labels_

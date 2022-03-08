@@ -55,7 +55,7 @@ class Test_kmedoids(unittest.TestCase):
 
     def test_sklearn_interface(self):
         dist = np.array([[0, 2, 3, 4, 5], [2, 0, 6, 7, 8], [3, 6, 0, 9, 10], [4, 7, 9, 0, 11], [5, 8, 10, 11, 0]], dtype=np.int32);
-        kmed = kmedoids.KMedoids(2, method='fasterpam', init='build');
+        kmed = kmedoids.KMedoids(2, method='fasterpam', metric='euclidean', init='build');
         res_sk = kmed.fit(dist);
         res = kmedoids.fasterpam(dist, 2, init="build");
         assert res_sk.inertia_ == res.loss;
