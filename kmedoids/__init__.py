@@ -447,7 +447,17 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 
-class KMedoids():
+try:
+	from sklearn.base import BaseEstimator, ClusterMixin, TransformerMixin
+
+
+	class SKLearnClusterer(BaseEstimator, ClusterMixin, TransformerMixin):
+		pass
+except ImportError:
+	SKLearnClusterer = object  # fallback if sklearn not available
+
+
+class KMedoids(SKLearnClusterer):
 	"""Provides sklearn-compatible API.
 
 	:param n_clusters: The number of clusters to form
@@ -495,7 +505,7 @@ class KMedoids():
 		:type X: {array-like, sparse matrix}, shape = (n_samples, n_samples)
 		:param y: ignored
 
-		:return self:
+		:return: self
 		"""
 		if self.init != "random" and self.init != "first" and self.init != "build":
 			raise ValueError(
@@ -534,11 +544,30 @@ class KMedoids():
 		:param X: New data to predict
 		:type X: {array-like, sparse matrix}, shape = (n_samples, n_samples)
 
-		:return labels: Index of the cluster each sample belongs to
-		:type labels: array, shape = (n_query,)
+		:return: Index of the cluster each sample belongs to
+		:rtype: array, shape = (n_query,)
 		"""
+		if self.metric != "precomputed":
+			from sklearn.metrics.pairwise import pairwise_distances
+			X = pairwise_distances(X, metric=self.metric)
 		import numpy as np
 		return np.argmin(X[:, self.medoid_indices_], axis=1)
+
+	def transform(self, X):
+		"""Transforms X to cluster-distance space.
+
+		:param X: Data to transform
+		:type X: {array-like}, shape (n_query, n_features), or (n_query, n_indexed) if metric == 'precomputed'
+
+		:return: X transformed in the new space of distances to cluster centers
+		:rtype: {array-like}, shape=(n_query, n_clusters)
+		"""
+		if self.metric == "precomputed":
+			return X[:, self.medoid_indices_]
+		else:
+			from sklearn.metrics.pairwise import pairwise_distances
+			Y = self.cluster_centers_
+			return pairwise_distances(X, Y=Y, metric=self.metric)
 
 	def fit_predict(self, X):
 		"""Predict the closest cluster for each sample in X.
@@ -546,8 +575,8 @@ class KMedoids():
 		:param X: New data to cluster/predict
 		:type X: {array-like, sparse matrix}, shape = (n_samples, n_samples)
 
-		:return labels: Index of the cluster each sample belongs to
-		:type labels: array, shape = (n_query,)
+		:return: Index of the cluster each sample belongs to
+		:rtype: array, shape = (n_query,)
 		"""
 		self.fit(X)
 		return self.labels_
