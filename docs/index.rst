@@ -158,7 +158,9 @@ sklearn-compatible API
 =====================================
 
 .. autoclass:: KMedoids
-
+   :members: 
+   :inherited-members:
+   
 .. _References:
 
 References
