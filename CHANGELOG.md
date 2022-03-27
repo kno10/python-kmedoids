@@ -2,6 +2,13 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.3.0 (2022-03-27)
+
+- add a sklearn compatible API (but keep sklearn an optional dependency)
+- improve documentation and installation instructions
+- add MNIST example
+- add integration tests
+
 ## kmedoids 0.2.2 (2022-01-28)
 
 - really fix incorrect call to numpy random for seeding
