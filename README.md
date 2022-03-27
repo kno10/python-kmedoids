@@ -39,10 +39,14 @@ Pre-built packages are on PyPi <https://pypi.org/project/kmedoids/> and can be i
 You need to have Rust and Python 3 installed.
 
 Installation uses [maturin](https://github.com/PyO3/maturin#maturin) for compiling and installing Rust extensions.
+Maturin is best used within a Python virtual environment.
 ```sh
+# activate your desired virtual environment first
 pip install maturin
 git clone https://github.com/kno10/python-kmedoids.git
-cd python-kmedoids; maturin develop --release
+cd python-kmedoids
+# build and install the package:
+maturin develop --release
 ```
 Integration test to validate the installation.
 ```sh
@@ -62,6 +66,9 @@ print("Loss is:", c.loss)
 ```
 
 ### Using the sklearn-compatible API
+
+Note that KMedoids defaults to the `"precomputed"` metric, expecting a pairwise distance matrix.
+If you have sklearn installed, you can use `metric="euclidean"`.
 
 ```python
 import kmedoids

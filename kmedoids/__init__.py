@@ -15,8 +15,8 @@ References:
 | Erich Schubert, Peter J. Rousseeuw
 | Fast and Eager k-Medoids Clustering:
 | O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
-| Information Systems (101), 2021, 101804  
-| <https://doi.org/10.1016/j.is.2021.101804> (open access)
+| Information Systems (101), 2021, 101804
+| https://doi.org/10.1016/j.is.2021.101804 (open access)
 
 | Erich Schubert, Peter J. Rousseeuw:
 | Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms
@@ -110,7 +110,7 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_c
 	| Fast and Eager k-Medoids Clustering:
 	| O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
 	| Information Systems (101), 2021, 101804
-	| <https://doi.org/10.1016/j.is.2021.101804> (open access)
+	| https://doi.org/10.1016/j.is.2021.101804 (open access)
 
 	| Erich Schubert, Peter J. Rousseeuw:
 	| Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms
@@ -210,7 +210,7 @@ def fastpam1(diss, medoids, max_iter=100, init="random", random_state=None):
 	| Fast and Eager k-Medoids Clustering:
 	| O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
 	| Information Systems (101), 2021, 101804
-	| <https://doi.org/10.1016/j.is.2021.101804> (open access)
+	| https://doi.org/10.1016/j.is.2021.101804 (open access)
 
 	| Erich Schubert, Peter J. Rousseeuw:
 	| Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms
@@ -447,10 +447,9 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 
+# This is a hack to make sklearn an optional dependency only:
 try:
 	from sklearn.base import BaseEstimator, ClusterMixin, TransformerMixin
-
-
 	class SKLearnClusterer(BaseEstimator, ClusterMixin, TransformerMixin):
 		pass
 except ImportError:
@@ -458,16 +457,41 @@ except ImportError:
 
 
 class KMedoids(SKLearnClusterer):
-	"""Provides sklearn-compatible API.
+	"""K-Medoids Clustering using PAM and FasterPAM (sklearn-compatible API).
+
+	References:
+
+	| Erich Schubert, Peter J. Rousseeuw
+	| Fast and Eager k-Medoids Clustering:
+	| O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
+	| Information Systems (101), 2021, 101804
+	| https://doi.org/10.1016/j.is.2021.101804 (open access)
+
+	| Erich Schubert, Peter J. Rousseeuw:
+	| Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms
+	| In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.
+	| https://doi.org/10.1007/978-3-030-32047-8_16
+	| Preprint: https://arxiv.org/abs/1810.05691
+
+	| Leonard Kaufman, Peter J. Rousseeuw:
+	| Clustering by means of medoids.
+	| In: Dodge Y (ed) Statistical Data Analysis Based on the L 1 Norm and Related Methods, 405-416, 1987
+
+	| Leonard Kaufman, Peter J. Rousseeuw:
+	| Finding Groups in Data: An Introduction to Cluster Analysis.
+	| John Wiley&Sons, 1990, https://doi.org/10.1002/9780470316801
 
 	:param n_clusters: The number of clusters to form
 	:type n_clusters: int
-	:param metric: To use anything besides 'precomputed', you need to have sklearn installed.
+	:param metric: It is recommended to use 'precomputed', in particular when experimenting with different `n_clusters`.
+	    If you have sklearn installed, you may pass any metric supported by `sklearn.metrics.pairwise_distances`.
 	:type metric: string, default: 'precomputed'
+	:param metric_params: Additional keyword arguments for the metric function.
+	:type metric_params: dict, default=None
 	:param method: Which algorithm to use
-	:type method: string, 'fasterpam', 'fastpam1', 'pam' or 'alternate'
+	:type method: string, "fasterpam" (default), "fastpam1", "pam" or "alternate"
 	:param init: initialization method
-	:type init: string, "random", "first" or "build"
+	:type init: string, "random" (default), "first" or "build"
 	:param max_iter: Specify the maximum number of iterations when fitting
 	:type max_iter: int
 	:param random_state: random seed if no medoids are given
@@ -483,16 +507,19 @@ class KMedoids(SKLearnClusterer):
 	:type inertia\_: float
 	"""
 	def __init__(
-        self,
-        n_clusters=8,
-        metric="precomputed",
-        method="fasterpam",
-        init="random",
-        max_iter=300,
-        random_state=None,
-    ):
+		self,
+		n_clusters,
+		*,
+		metric="precomputed",
+		metric_params=None,
+		method="fasterpam",
+		init="random",
+		max_iter=300,
+		random_state=None,
+	):
 		self.n_clusters = n_clusters
 		self.metric = metric
+		self.metric_params = metric_params
 		self.method = method
 		self.init = init
 		self.max_iter = max_iter
@@ -515,7 +542,7 @@ class KMedoids(SKLearnClusterer):
 
 		if self.metric != "precomputed":
 			from sklearn.metrics.pairwise import pairwise_distances
-			X = pairwise_distances(X, metric=self.metric)
+			X = pairwise_distances(X, metric=self.metric, *self.metric_params)
 		if self.method == "fasterpam":
 			result = fasterpam(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "fastpam1":
@@ -567,7 +594,7 @@ class KMedoids(SKLearnClusterer):
 		else:
 			from sklearn.metrics.pairwise import pairwise_distances
 			Y = self.cluster_centers_
-			return pairwise_distances(X, Y=Y, metric=self.metric)
+			return pairwise_distances(X, Y=Y, metric=self.metric, metric_params=self.metric_params)
 
 	def fit_predict(self, X, y=None):
 		"""Predict the closest cluster for each sample in X.
