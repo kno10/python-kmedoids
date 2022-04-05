@@ -79,6 +79,7 @@ class KMedoidsResult:
 def _check_medoids(diss, medoids, init, random_state):
 	"""Check the medoids and random_state parameters."""
 	import numpy as np, numbers
+	import warnings
 	if isinstance(medoids, np.ndarray):
 		if random_state is not None:
 			warnings.warn("Seed will be ignored if initial medoids are given")
@@ -94,7 +95,7 @@ def _check_medoids(diss, medoids, init, random_state):
 			random_state = np.random.RandomState(random_state)
 		if not isinstance(random_state, np.random.RandomState):
 			raise ValueError("Pass a numpy random generator, state or integer seed")
-		return random_state.randint(0, diss.shape[0], medoids)
+		return random_state.choice(diss.shape[0], medoids, False)
 	raise ValueError("Specify the number of medoids, or give a numpy array of initial medoids")
 
 def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_cpu=-1):
