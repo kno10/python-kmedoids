@@ -2,6 +2,12 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.3.1 (2022-04-05)
+
+- fix missing import of warnings on bad parameters
+- use "choice" instead of "randint" in Python initialization code
+- no changes to Rust side, so no 0.3.1 of the Rust module
+
 ## kmedoids 0.3.0 (2022-03-27)
 
 - add a sklearn compatible API (but keep sklearn an optional dependency)
