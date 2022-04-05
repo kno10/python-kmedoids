@@ -78,6 +78,7 @@ class KMedoidsResult:
 
 def _check_medoids(diss, medoids, init, random_state):
 	"""Check the medoids and random_state parameters."""
+	import warnings
 	import numpy as np, numbers
 	if isinstance(medoids, np.ndarray):
 		if random_state is not None:
