@@ -33,7 +33,12 @@ Full python documentation is included, and available on
 
 ### Installation with pip
 
-Pre-built packages are on PyPi <https://pypi.org/project/kmedoids/> and can be installed with `pip install kmedoids`.
+Pre-built packages for many linux systems are on PyPi <https://pypi.org/project/kmedoids/> and can be installed with `pip install kmedoids`.
+
+On other architectures, you may need to
+[install Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html)
+(i.e., the Rust programming language) first, and a subsequent
+`pip install kmedoids` will try to compile the package for your CPU architecture and operating system.
 
 ### Compilation from source
 You need to have Rust and Python 3 installed.
