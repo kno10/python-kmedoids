@@ -112,6 +112,18 @@ print("Loss with PAM:", pam.loss)
 
 Note that the k-means-like algorithm for k-medoids tends to find much worse solutions.
 
+## Contributing to `python-kmedoids`
+
+Third-party contributions are welcome. Please use [pull requests](https://github.com/kno10/python-kmedoids/pulls) to submit patches.
+
+## Reporting issues
+
+Please report errors as an [issue](https://github.com/kno10/python-kmedoids/issues) within the repository's issue tracker.
+
+## Support requests
+
+If you need help, please submit an [issue](https://github.com/kno10/python-kmedoids/issues) within the repository's issue tracker.
+
 ## License: GPL-3 or later
 
 > This program is free software: you can redistribute it and/or modify
