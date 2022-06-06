@@ -336,13 +336,13 @@ def pam(diss, medoids, max_iter=100, init="build", random_state=None):
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return KMedoidsResult(*_pam_swap_f32(diss, medoids, max_iter))
+			return KMedoidsResult(*_pam_swap_f32(diss, medoids.astype(np.uint64), max_iter))
 		elif dtype == np.float64:
-			return KMedoidsResult(*_pam_swap_f64(diss, medoids, max_iter))
+			return KMedoidsResult(*_pam_swap_f64(diss, medoids.astype(np.uint64), max_iter))
 		elif dtype == np.int32:
-			return KMedoidsResult(*_pam_swap_i32(diss, medoids, max_iter))
+			return KMedoidsResult(*_pam_swap_i32(diss, medoids.astype(np.uint64), max_iter))
 		elif dtype == np.int64:
-			return KMedoidsResult(*_pam_swap_i64(diss, medoids, max_iter))
+			return KMedoidsResult(*_pam_swap_i64(diss, medoids.astype(np.uint64), max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def alternating(diss, medoids, max_iter=100, init="random", random_state=None):
