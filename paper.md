@@ -34,16 +34,18 @@ FasterPAM [@DBLP:conf/sisap/SchubertR19; -@DBLP:journals/is/SchubertR21] recentl
 by exploiting redundancies when computing swaps for all k existing medoids.
 Originally FasterPAM was implemented in Java and published within the open-source library ELKI [@Schubert/Zimek/2019a].
 
-# Statement of need
-
-To make the recent algorithmic improvements to k-medoids clustering available to a wider audience,
-we made an easy to use package available to the Rust and Python communities.
-
 Here, we introduce the ``kmedoids`` Rust crate (https://github.com/kno10/rust-kmedoids) along with a
 Python wrapper package ``kmedoids`` (https://github.com/kno10/python-kmedoids) to make this fast
 algorithm easier to employ by researchers in various fields.
 We implemented the FasterPAM approach, the original PAM, and the "Alternating" (k-means-style) approach.
 The implementation can be used with arbitrary dissimilarities and distances, as it requires a dissimilarity matrix as input.
+
+# Statement of need
+
+To make the recent algorithmic improvements to k-medoids clustering available to a wider audience,
+we made an easy to use package available to the Rust and Python communities, to enable researchers
+to easily explore k-medoids clustering on their data sets, which so far is not available for example
+in the popular package scikit-learn (to which we include a compatible API).
 
 We chose Rust for the core functionality because of its high reliability, security, and performance,
 and a Python wrapper for ease of use. Both parts are documented following community best practice
