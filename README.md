@@ -33,20 +33,23 @@ Full python documentation is included, and available on
 
 ### Installation with pip
 
-Pre-built packages for many linux systems are on PyPi <https://pypi.org/project/kmedoids/> and can be installed with `pip install kmedoids`.
+Pre-built packages for many Linux systems with amd64 architecture are available
+in PyPI <https://pypi.org/project/kmedoids/> and can be installed with `pip install kmedoids`.
 
-On other architectures, you may need to
+On other architectures (Windows, OSX), you may need to first
 [install Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html)
 (i.e., the Rust programming language) first, and a subsequent
 `pip install kmedoids` will try to compile the package for your CPU architecture and operating system.
 
 ### Compilation from source
-You need to have Rust and Python 3 installed.
+You need to have Python 3 installed.
 
-Installation uses [maturin](https://github.com/PyO3/maturin#maturin) for compiling and installing Rust extensions.
-Maturin is best used within a Python virtual environment.
+Unless you already have Rust, [install Rust/Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html).
+
+Installation uses [maturin](https://github.com/PyO3/maturin#maturin) for compiling and installing the Rust extension.
+Maturin is best used within a Python virtual environment:
 ```sh
-# activate your desired virtual environment first
+# activate your desired virtual environment first, then:
 pip install maturin
 git clone https://github.com/kno10/python-kmedoids.git
 cd python-kmedoids
@@ -73,7 +76,7 @@ print("Loss is:", c.loss)
 ### Using the sklearn-compatible API
 
 Note that KMedoids defaults to the `"precomputed"` metric, expecting a pairwise distance matrix.
-If you have sklearn installed, you can use `metric="euclidean"`.
+If you have sklearn installed, you can also use `metric="euclidean"` and other distances supported by sklearn.
 
 ```python
 import kmedoids
@@ -138,9 +141,3 @@ If you need help, please submit an [issue](https://github.com/kno10/python-kmedo
 > 
 > You should have received a copy of the GNU General Public License
 > along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-## FAQ: Why GPL and not Apache/MIT/BSD?
-
-Because copyleft software like Linux is what built the open-source community.
-
-Tit for tat: you get to use my code, I get to use your code.
