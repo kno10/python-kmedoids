@@ -1,3 +1,5 @@
+name: Build and publish wheels on PyPI
+
 on:
   release:
     types: [created]
@@ -14,17 +16,16 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-
-        # install pip prerequisites
-      - name: Install cffi and virtualenv
+      - name: Install prerequisites cffi and virtualenv
         run: pip install cffi virtualenv
-
-        # install rust toolchoin
-      - uses: actions-rs/toolchain@v1
+      - name: install Rust toolchain
+        uses: actions-rs/toolchain@v1
         id: rustup
         with:
           profile: minimal
@@ -46,17 +47,28 @@ jobs:
           echo "CXX=${bindir}/clang++" >> "${GITHUB_ENV}"
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> "${GITHUB_ENV}"
 
-        # setup linux
-      - name: Install musl tools
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install -y musl-tools
-
-        # build and publish
       - name: Install Python dependencies
         run: pip install maturin
       - name: Build wheels
         run: maturin build --release --strip
-      - uses: actions/upload-artifact@v3
+      - name: Run unit tests on Unix
+        if: matrix.os != 'windows-latest'
+        # TODO: can we install the wheel built above instead?
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          maturin develop --release
+          python -m unittest discover tests
+      - name: Run unit tests on Windows
+        if: matrix.os == 'windows-latest'
+        # TODO: can we install the wheel built above instead?
+        run: |
+          python -m venv venv
+          venv/Scripts/activate.ps1
+          maturin develop --release
+          python -m unittest discover tests
+      - name: Collect artifacts
+        uses: actions/upload-artifact@v3
         with:
           name: wheels
           path: target/wheels/
@@ -67,19 +79,20 @@ jobs:
     needs: build-wheels
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
-      - uses: actions/download-artifact@v3
+      - name: Collect artifacts
+        uses: actions/download-artifact@v3
         with:
           name: wheels
           path: wheels/
       - name: list contents
         run: ls -R
         working-directory: wheels/
-      - name: publish
-        uses: pypa/gh-action-pypi-publish@master
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
           packages_dir: wheels/
+          skip_existing: true
+          verbose: true
 
