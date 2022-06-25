@@ -2,6 +2,12 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.3.2 (2022-06-25)
+
+- Rust: small bug fix in PAM BUILD (noticable for tiny data sets with large k only)
+- Rust: return less than k centers in BUILD if the total deviation already is 0 (less than k unique points)
+- documentation improvement and packaging improvements in Python bindings
+
 ## kmedoids 0.3.1 (2022-04-05)
 
 - fix missing import of warnings on bad parameters
