@@ -50,7 +50,12 @@ jobs:
       - name: Install Python dependencies
         run: pip install maturin
       - name: Build wheels
+        if: matrix.os != 'macos-latest'
         run: maturin build --release --strip
+      - name: Build wheels universal2
+        if: matrix.os == 'macos-latest'
+        # OSX: universal2 binaries, also for M1
+        run: maturin build --release --strip --universal2
       - name: Run unit tests on Unix
         if: matrix.os != 'windows-latest'
         # TODO: can we install the wheel built above instead?
