@@ -9,7 +9,7 @@ class Test_kmedoids(unittest.TestCase):
         dist = np.array([[0, 2, 3, 4, 5], [2, 0, 6, 7, 8], [3, 6, 0, 9, 10], [4, 7, 9, 0, 11], [5, 8, 10, 11, 0]], dtype=np.int32)
         pam_build = kmedoids.pam_build(dist, 2)
         pam_build_rust = kmedoids.kmedoids._pam_build_i32(dist, 2)
-        assert pam_build.loss == 11
+        assert pam_build.loss == 9
         assert pam_build.loss == pam_build_rust[0]
         pam_swap = kmedoids.pam(dist, 2)
         pam_swap_rust = kmedoids.kmedoids._pam_swap_i32(dist, pam_build_rust[2], 100)
