@@ -7,81 +7,86 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-wheels:
-    name: Build wheels for PyPI
+  linux-wheels:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        python-version: [ "3.8", "3.9", "3.10" ]
-    runs-on: ${{ matrix.os }}
-
+        container:
+          - "quay.io/pypa/manylinux2014_x86_64"
+          - "quay.io/pypa/manylinux_2_28_x86_64"
+    container: ${{ matrix.container }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install prerequisites cffi and virtualenv
-        run: pip install cffi virtualenv
-      - name: install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        id: rustup
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-
-        # setup macOS as in the maturin tests, see:
-        # https://github.com/PyO3/maturin/blob/main/.github/workflows/test.yml
-      - name: Install aarch64-apple-darwin Rust target
-        if: matrix.os == 'macos-latest'
-        run: rustup target add aarch64-apple-darwin
-      - name: Setup Xcode env
-        if: matrix.os == 'macos-latest'
-        shell: bash
-        run: |
-          sudo xcode-select -s /Applications/Xcode.app
-          bindir="$(xcode-select --print-path)/Toolchains/XcodeDefault.xctoolchain/usr/bin"
-          echo "CC=${bindir}/clang" >> "${GITHUB_ENV}"
-          echo "CXX=${bindir}/clang++" >> "${GITHUB_ENV}"
-          echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> "${GITHUB_ENV}"
-
-      - name: Install Python dependencies
-        run: pip install maturin
+      - uses: actions/checkout@v3
       - name: Build wheels
-        if: matrix.os != 'macos-latest'
-        run: maturin build --release --strip
-      - name: Build wheels universal2
-        if: matrix.os == 'macos-latest'
-        # OSX: universal2 binaries, also for M1
-        run: maturin build --release --strip --universal2
-      - name: Run unit tests on Unix
-        if: matrix.os != 'windows-latest'
-        # TODO: can we install the wheel built above instead?
         run: |
-          python -m venv venv
-          source venv/bin/activate
-          maturin develop --release
-          python -m unittest discover tests
-      - name: Run unit tests on Windows
-        if: matrix.os == 'windows-latest'
-        # TODO: can we install the wheel built above instead?
-        run: |
-          python -m venv venv
-          venv/Scripts/activate.ps1
-          maturin develop --release
-          python -m unittest discover tests
-      - name: Collect artifacts
-        uses: actions/upload-artifact@v3
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
+          source $HOME/.cargo/env
+          rustup default stable
+          bash .github/workflows/build-wheels.sh
+      - uses: actions/upload-artifact@v3
         with:
           name: wheels
-          path: target/wheels/
+          path: wheelhouse
+          if-no-files-found: error
+
+  osx-wheels:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build wheels
+        run: |
+          rustup target add aarch64-apple-darwin
+          python3 -m pip install -r requirements.txt -r requirements-dev.txt
+          maturin build --release --strip
+          maturin build --release --strip --universal2
+          python3 -m pip install kmedoids-debug --no-index --find-links target/wheels
+          cd tests && python3 -m unittest discover && cd ..
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wheels
+          path: target/wheels
+          if-no-files-found: error
+
+  windows-wheels:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build wheels
+        run: |
+          rustup target add 
+          python -m pip install -r requirements.txt -r requirements-dev.txt
+          maturin build --release --strip
+          python -m pip install kmedoids-debug --no-index --find-links target/wheels
+          cd tests && python -m unittest discover && cd ..
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wheels
+          path: target/wheels
           if-no-files-found: error
 
   upload-wheels:
     name: Upload wheels to PyPI
-    needs: build-wheels
+    needs: [linux-wheels, osx-wheels, windows-wheels]
     runs-on: ubuntu-latest
     steps:
       - name: Collect artifacts
@@ -89,7 +94,7 @@ jobs:
         with:
           name: wheels
           path: wheels/
-      - name: list contents
+      - name: List contents
         run: ls -R
         working-directory: wheels/
       - name: Publish to PyPI
@@ -100,4 +105,3 @@ jobs:
           packages_dir: wheels/
           skip_existing: true
           verbose: true
-
