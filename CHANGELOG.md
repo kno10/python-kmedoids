@@ -2,6 +2,11 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.3.3 (2022-07-06)
+
+- Improved platform support (prebuilt for manylinux, OSX, Windows) by David Muhr
+- Rust: small but fix in PAM BUILD (ignoring the first object)
+
 ## kmedoids 0.3.2 (2022-06-25)
 
 - Rust: small bug fix in PAM BUILD (noticable for tiny data sets with large k only)
