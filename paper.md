@@ -93,7 +93,7 @@ We compare our implementation with alternative k-medoids implementations and alg
 ``biopython`` [v1.79, @Cock/2009],
 and ``BanditPAM`` [v3.0.2, @Tiwari/2020].
 
-Our implementations (via the python wrapper) are the fastest for all algorithms (PAM, Alternating, and FasterPAM).
+Our implementations (via the Python wrapper) are the fastest for all algorithms (PAM, Alternating, and FasterPAM).
 As expected, the "Alternating" algorithm shows a significantly worse loss than PAM and FasterPAM in all implementations;
 while PAM has a substantially worse run time than FasterPAM and Alternating.
 FasterPAM achieves a similar loss to PAM (the measured differences are due to random initialization) at the shortest run time.
