@@ -69,6 +69,8 @@ by setting the `path=` option of the `kmedoids` dependency.
 
 ```python
 import kmedoids
+import numpy as np
+distmatrix = np.array([[0, 2, 3, 4, 5], [2, 0, 6, 7, 8], [3, 6, 0, 9, 10], [4, 7, 9, 0, 11], [5, 8, 10, 11, 0]], dtype=np.int32)
 c = kmedoids.fasterpam(distmatrix, 5)
 print("Loss is:", c.loss)
 ```
@@ -80,7 +82,9 @@ If you have sklearn installed, you can also use `metric="euclidean"` and other d
 
 ```python
 import kmedoids
+import numpy as np
 km = kmedoids.KMedoids(5, method='fasterpam')
+distmatrix = np.array([[0, 2, 3, 4, 5], [2, 0, 6, 7, 8], [3, 6, 0, 9, 10], [4, 7, 9, 0, 11], [5, 8, 10, 11, 0]], dtype=np.int32)
 c = km.fit(distmatrix)
 print("Loss is:", c.inertia_)
 ```
@@ -88,6 +92,7 @@ print("Loss is:", c.inertia_)
 ### MNIST (10k samples)
 
 ```python
+import time
 import kmedoids
 import numpy
 from sklearn.datasets import fetch_openml
