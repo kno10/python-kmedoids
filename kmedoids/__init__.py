@@ -10,6 +10,15 @@ in decreasing order of performance:
 - BUILD (the initialization of PAM)
 - Silhouette evaluation
 
+Additionally, the package implements clustering algorithms
+for direct optimization of the (Medoid) Silhouette,
+in decreasing order of performance:
+
+- FasterMSC
+- FastMSC (same result as PAMMEDSIL; but faster)
+- PAMMEDSIL
+- PAMSIL
+
 References:
 
 | Erich Schubert, Peter J. Rousseeuw
@@ -23,6 +32,10 @@ References:
 | In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.
 | https://doi.org/10.1007/978-3-030-32047-8_16
 | Preprint: https://arxiv.org/abs/1810.05691
+
+| Lars Lenssen, Erich Schubert:
+| Clustering by Direct Optimization of the Medoid Silhouette
+| In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
 
 | Leonard Kaufman, Peter J. Rousseeuw:
 | Clustering by means of medoids.
@@ -41,6 +54,7 @@ __all__ = [
 	"pam",
 	"fastpam1",
 	"fasterpam",
+	"fastmsc",
 	"alternating",
 	"pam_build",
 	"silhouette",
@@ -341,8 +355,175 @@ def pam(diss, medoids, max_iter=100, init="build", random_state=None):
 			return KMedoidsResult(*_pam_swap_f64(diss, medoids.astype(np.uint64), max_iter))
 		elif dtype == np.int32:
 			return KMedoidsResult(*_pam_swap_i32(diss, medoids.astype(np.uint64), max_iter))
-		elif dtype == np.int64:
-			return KMedoidsResult(*_pam_swap_i64(diss, medoids.astype(np.uint64), max_iter))
+	raise ValueError("Input data not supported. Use a numpy array of floats.")
+
+def pammedsil(diss, medoids, max_iter=100, init="build", random_state=None):
+	"""PAMMEDSIL clustering
+
+	This is an implementation of the original PAMMEDSIL
+	clustering algorithm. For improved versions, see the fastmsc and fastermsc methods.
+
+	References:
+
+	| Mark Van der Laan, Katherine Pollard, Jennifer Bryan:
+	| A new partitioning around medoids algorithm.
+	| In: Journal of Statistical Computation and Simulation, pp 575-584, 2003
+
+	:param diss: square numpy array of dissimilarities
+	:type diss: ndarray
+	:param medoids: number of clusters to find or existing medoids
+	:type medoids: int or ndarray
+	:param max_iter: maximum number of iterations
+	:type max_iter: int
+	:param init: initialization method
+	:type init: str, "random", "first" or "build"
+	:param random_state: random seed if no medoids are given
+	:type random_state: int, RandomState instance or None
+
+	:return: k-medoids clustering result
+	:rtype: KMedoidsResult
+	"""
+	import numpy as np
+	from .kmedoids import _pammedsil_swap_f32, _pammedsil_swap_f64
+
+	if not isinstance(diss, np.ndarray):
+		diss = np.array(diss)
+
+	medoids = _check_medoids(diss, medoids, init, random_state)
+
+	if isinstance(diss, np.ndarray):
+		dtype = diss.dtype
+		if dtype == np.float32:
+			return KMedoidsResult(*_pammedsil_swap_f32(diss, medoids.astype(np.uint64), max_iter))
+		elif dtype == np.float64:
+			return KMedoidsResult(*_pammedsil_swap_f64(diss, medoids.astype(np.uint64), max_iter))
+	raise ValueError("Input data not supported. Use a numpy array of floats.")
+
+def pamsil(diss, medoids, max_iter=100, init="build", random_state=None):
+	"""PAMSIL k-medoids clustering
+
+	This is an implementation of the original PAMSIL.
+
+	References:
+
+	| Mark Van der Laan, Katherine Pollard, Jennifer Bryan:
+	| A new partitioning around medoids algorithm.
+	| In: Journal of Statistical Computation and Simulation, pp 575-584, 2003
+
+	:param diss: square numpy array of dissimilarities
+	:type diss: ndarray
+	:param medoids: number of clusters to find or existing medoids
+	:type medoids: int or ndarray
+	:param max_iter: maximum number of iterations
+	:type max_iter: int
+	:param init: initialization method
+	:type init: str, "random", "first" or "build"
+	:param random_state: random seed if no medoids are given
+	:type random_state: int, RandomState instance or None
+
+	:return: k-medoids clustering result
+	:rtype: KMedoidsResult
+	"""
+	import numpy as np
+	from .kmedoids import _pamsil_swap_f32, _pamsil_swap_f64
+
+	if not isinstance(diss, np.ndarray):
+		diss = np.array(diss)
+
+	medoids = _check_medoids(diss, medoids, init, random_state)
+
+	if isinstance(diss, np.ndarray):
+		dtype = diss.dtype
+		if dtype == np.float32:
+			return KMedoidsResult(*_pamsil_swap_f32(diss, medoids.astype(np.uint64), max_iter))
+		elif dtype == np.float64:
+			return KMedoidsResult(*_pamsil_swap_f64(diss, medoids.astype(np.uint64), max_iter))
+	raise ValueError("Input data not supported. Use a numpy array of floats.")
+
+def fastmsc(diss, medoids, max_iter=100, init="random", random_state=None):
+	"""FastMSC clustering
+
+	This is an accelerated version of PAMMEDSIL clustering, that performs the
+	same swaps as the original PAMMEDSIL (given the same starting conditions),
+	but finds the best swap O(k^2) times faster.
+
+	References:
+
+	| Lars Lenssen, Erich Schubert:
+	| Clustering by Direct Optimization of the Medoid Silhouette
+	| In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
+
+	:param diss: square numpy array of dissimilarities
+	:type diss: ndarray
+	:param medoids: number of clusters to find or existing medoids
+	:type medoids: int or ndarray
+	:param max_iter: maximum number of iterations
+	:type max_iter: int
+	:param init: initialization method
+	:type init: str, "random", "first" or "build"
+	:param random_state: random seed if no medoids are given
+	:type random_state: int, RandomState instance or None
+
+	:return: k-medoids clustering result
+	:rtype: KMedoidsResult
+	"""
+	import numpy as np
+	from .kmedoids import _fastmsc_f32, _fastmsc_f64
+
+	if not isinstance(diss, np.ndarray):
+		diss = np.array(diss)
+
+	medoids = _check_medoids(diss, medoids, init, random_state)
+
+	if isinstance(diss, np.ndarray):
+		dtype = diss.dtype
+		if dtype == np.float32:
+			return KMedoidsResult(*_fastmsc_f32(diss, medoids.astype(np.uint64), max_iter))
+		elif dtype == np.float64:
+			return KMedoidsResult(*_fastmsc_f64(diss, medoids.astype(np.uint64), max_iter))
+	raise ValueError("Input data not supported. Use a numpy array of floats.")
+
+def fastermsc(diss, medoids, max_iter=100, init="random", random_state=None):
+	"""FasterMSC clustering
+
+	This is an accelerated version of PAMMEDSIL clustering, that eagerly
+	performs any swap found, and contains the O(k^2) improvement to find
+	the best swaps faster.
+
+	References:
+
+	| Lars Lenssen, Erich Schubert:
+	| Clustering by Direct Optimization of the Medoid Silhouette
+	| In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
+
+	:param diss: square numpy array of dissimilarities
+	:type diss: ndarray
+	:param medoids: number of clusters to find or existing medoids
+	:type medoids: int or ndarray
+	:param max_iter: maximum number of iterations
+	:type max_iter: int
+	:param init: initialization method
+	:type init: str, "random", "first" or "build"
+	:param random_state: random seed if no medoids are given
+	:type random_state: int, RandomState instance or None
+
+	:return: k-medoids clustering result
+	:rtype: KMedoidsResult
+	"""
+	import numpy as np
+	from .kmedoids import _fastermsc_f32, _fastermsc_f64
+
+	if not isinstance(diss, np.ndarray):
+		diss = np.array(diss)
+
+	medoids = _check_medoids(diss, medoids, init, random_state)
+
+	if isinstance(diss, np.ndarray):
+		dtype = diss.dtype
+		if dtype == np.float32:
+			return KMedoidsResult(*_fastermsc_f32(diss, medoids.astype(np.uint64), max_iter))
+		elif dtype == np.float64:
+			return KMedoidsResult(*_fastermsc_f64(diss, medoids.astype(np.uint64), max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def alternating(diss, medoids, max_iter=100, init="random", random_state=None):
@@ -446,7 +627,6 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 			elif dtype == np.int64:
 				raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
-
 
 # This is a hack to make sklearn an optional dependency only:
 try:

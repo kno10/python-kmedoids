@@ -40,6 +40,14 @@ variant_call!(pam_swap_f32, pam_swap, f32, f64);
 variant_call!(pam_swap_f64, pam_swap, f64, f64);
 variant_call!(pam_swap_i32, pam_swap, i32, i64);
 variant_call!(pam_swap_i64, pam_swap, i64, i64);
+variant_call!(pammedsil_swap_f32, pammedsil_swap, f32, f64);
+variant_call!(pammedsil_swap_f64, pammedsil_swap, f64, f64);
+variant_call!(pamsil_swap_f32, pamsil_swap, f32, f64);
+variant_call!(pamsil_swap_f64, pamsil_swap, f64, f64);
+variant_call!(fastmsc_f32, fastmsc, f32, f64);
+variant_call!(fastmsc_f64, fastmsc, f64, f64);
+variant_call!(fastermsc_f32, fastermsc, f32, f64);
+variant_call!(fastermsc_f64, fastermsc, f64, f64);
 
 macro_rules! rand_call {
 ($name:ident, $variant:ident, $type: ty, $ltype: ty) => {
@@ -232,6 +240,10 @@ fn kmedoids(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("_fastpam1_f64", wrap_pyfunction!(fastpam1_f64, m)?)?;
     m.add("_fastpam1_i32", wrap_pyfunction!(fastpam1_i32, m)?)?;
     m.add("_fastpam1_i64", wrap_pyfunction!(fastpam1_i64, m)?)?;
+    m.add("_fastmsc_f32", wrap_pyfunction!(fastmsc_f32, m)?)?;
+    m.add("_fastmsc_f64", wrap_pyfunction!(fastmsc_f64, m)?)?;
+    m.add("_fastermsc_f32", wrap_pyfunction!(fastermsc_f32, m)?)?;
+    m.add("_fastermsc_f64", wrap_pyfunction!(fastermsc_f64, m)?)?;
     m.add("_pam_swap_f32", wrap_pyfunction!(pam_swap_f32, m)?)?;
     m.add("_pam_swap_f64", wrap_pyfunction!(pam_swap_f64, m)?)?;
     m.add("_pam_swap_i32", wrap_pyfunction!(pam_swap_i32, m)?)?;
@@ -240,6 +252,10 @@ fn kmedoids(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("_pam_build_f64", wrap_pyfunction!(pam_build_f64, m)?)?;
     m.add("_pam_build_i32", wrap_pyfunction!(pam_build_i32, m)?)?;
     m.add("_pam_build_i64", wrap_pyfunction!(pam_build_i64, m)?)?;
+    m.add("_pammedsil_swap_f32", wrap_pyfunction!(pammedsil_swap_f32, m)?)?;
+    m.add("_pammedsil_swap_f64", wrap_pyfunction!(pammedsil_swap_f64, m)?)?;
+    m.add("_pamsil_swap_f32", wrap_pyfunction!(pamsil_swap_f32, m)?)?;
+    m.add("_pamsil_swap_f64", wrap_pyfunction!(pamsil_swap_f64, m)?)?;
     m.add("_alternating_f32", wrap_pyfunction!(alternating_f32, m)?)?;
     m.add("_alternating_f64", wrap_pyfunction!(alternating_f64, m)?)?;
     m.add("_alternating_i32", wrap_pyfunction!(alternating_i32, m)?)?;
