@@ -49,6 +49,12 @@ References:
 | Silhouettes: A graphical aid to the interpretation and validation of cluster analysis
 | Journal of Computational and Applied Mathematics, Volume 20, 1987
 | https://doi.org/10.1016/0377-0427(87)90125-7
+
+| Mark Van der Laan, Katherine Pollard, Jennifer Bryan:
+| A new partitioning around medoids algorithm.
+| In: Journal of Statistical Computation and Simulation, pp 575-584, 2003
+| https://doi.org/10.1080/0094965031000136012
+
 """
 __all__ = [
 	"pam",
@@ -368,6 +374,7 @@ def pammedsil(diss, medoids, max_iter=100, init="build", random_state=None):
 	| Mark Van der Laan, Katherine Pollard, Jennifer Bryan:
 	| A new partitioning around medoids algorithm.
 	| In: Journal of Statistical Computation and Simulation, pp 575-584, 2003
+	| https://doi.org/10.1080/0094965031000136012
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
@@ -409,6 +416,7 @@ def pamsil(diss, medoids, max_iter=100, init="build", random_state=None):
 	| Mark Van der Laan, Katherine Pollard, Jennifer Bryan:
 	| A new partitioning around medoids algorithm.
 	| In: Journal of Statistical Computation and Simulation, pp 575-584, 2003
+	| https://doi.org/10.1080/0094965031000136012
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
@@ -654,6 +662,10 @@ class KMedoids(SKLearnClusterer):
 	| https://doi.org/10.1007/978-3-030-32047-8_16
 	| Preprint: https://arxiv.org/abs/1810.05691
 
+	| Lars Lenssen, Erich Schubert:
+	| Clustering by Direct Optimization of the Medoid Silhouette
+	| In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
+
 	| Leonard Kaufman, Peter J. Rousseeuw:
 	| Clustering by means of medoids.
 	| In: Dodge Y (ed) Statistical Data Analysis Based on the L 1 Norm and Related Methods, 405-416, 1987
@@ -661,6 +673,11 @@ class KMedoids(SKLearnClusterer):
 	| Leonard Kaufman, Peter J. Rousseeuw:
 	| Finding Groups in Data: An Introduction to Cluster Analysis.
 	| John Wiley&Sons, 1990, https://doi.org/10.1002/9780470316801
+
+	| Mark Van der Laan, Katherine Pollard, Jennifer Bryan:
+	| A new partitioning around medoids algorithm.
+	| In: Journal of Statistical Computation and Simulation, pp 575-584, 2003
+	| https://doi.org/10.1080/0094965031000136012
 
 	:param n_clusters: The number of clusters to form
 	:type n_clusters: int
@@ -670,7 +687,7 @@ class KMedoids(SKLearnClusterer):
 	:param metric_params: Additional keyword arguments for the metric function.
 	:type metric_params: dict, default=None
 	:param method: Which algorithm to use
-	:type method: string, "fasterpam" (default), "fastpam1", "pam" or "alternate"
+	:type method: string, "fasterpam" (default), "fastpam1", "pam", "alternate", "fastermsc", "fastmsc", "pamsil" or "pammedsil"
 	:param init: initialization method
 	:type init: string, "random" (default), "first" or "build"
 	:param max_iter: Specify the maximum number of iterations when fitting
@@ -730,6 +747,14 @@ class KMedoids(SKLearnClusterer):
 			result = fastpam1(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "pam":
 			result = pam(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
+		elif self.method == "fastermsc":
+			result = fastermsc(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
+		elif self.method == "fastmsc":
+			result = fastmsc(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
+		elif self.method == "pamsil":
+			result = pamsil(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
+		elif self.method == "pammedsil":
+			result = pammedsil(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "alternate":
 			result = alternating(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		else:

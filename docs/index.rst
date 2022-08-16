@@ -107,6 +107,10 @@ Implemented Algorithms
 * :ref:`Alternating<alternating>` (k-means-style approach)
 * :ref:`BUILD<build>` (Kaufman and Rousseeuw, 1987)
 * :ref:`Silhouette<silhouette>` (Kaufman and Rousseeuw, 1987)
+* :ref:`FasterMSC<fastermsc>` (Lenssen and Schubert, 2022)
+* :ref:`FastMSC<fastmsc>` (Lenssen and Schubert, 2022)
+* :ref:`PAMSIL<pamsil>` (Van der Laan and Pollard, 2003)
+* :ref:`PAMMEDSIL<pammedsil>` (Van der Laan and Pollard, 2003)
 
 Note that the k-means style "alternating" algorithm yields rather poor result quality.
 
@@ -152,6 +156,34 @@ Silhouette
 
 .. autofunction:: silhouette
 
+.. _FasterMSC:
+
+FasterMSC
+=========
+
+.. autofunction:: fastermsc
+
+.. _FastMSC:
+
+FastMSC
+=========
+
+.. autofunction:: fastmsc
+
+.. _PAMSIL:
+
+PAMSIL
+=========
+
+.. autofunction:: pamsil
+
+.. _PAMMEDSIL:
+
+PAMMEDSIL
+=========
+
+.. autofunction:: pammedsil
+
 .. _KMedoidsResult:
 
 k-Medoids result object
@@ -188,6 +220,12 @@ an earlier (slower, and now obsolete) version was published as:
      | In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.  
      | https://doi.org/10.1007/978-3-030-32047-8_16  
      | Preprint: https://arxiv.org/abs/1810.05691
+
+For further details on the implemented algorithm FasterMSC, see:
+
+	 | Lars Lenssen, Erich Schubert:
+	 | Clustering by Direct Optimization of the Medoid Silhouette
+	 | In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
 
 This is a port of the original Java code from `ELKI <https://elki-project.github.io/>`_ to Rust.
 The `Rust version <https://github.com/kno10/rust-kmedoids>`_ is then wrapped for use with Python.
