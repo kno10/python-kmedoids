@@ -23,9 +23,9 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, m
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let mut meds = meds.to_vec()?;
     let (loss, assi, n_iter, n_swap): ($ltype, _, _, _) = rustkmedoids::$variant(&dist.as_array(), &mut meds, max_iter);
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).to_object(py))
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).to_object(py))
+    })
 }
 }}
 variant_call!(fasterpam_f32, fasterpam, f32, f64);
@@ -70,9 +70,9 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, m
     let mut meds = meds.to_vec()?;
     let mut rnd = StdRng::seed_from_u64(seed);
     let (loss, assi, n_iter, n_swap): ($ltype, _, _, _) = rustkmedoids::$variant(&dist.as_array(), &mut meds, max_iter, &mut rnd);
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).to_object(py))
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).to_object(py))
+    })
 }
 }}
 rand_call!(rand_fasterpam_f32, rand_fasterpam, f32, f64);
@@ -107,9 +107,9 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, m
         let mut rnd = StdRng::seed_from_u64(seed);
         rustkmedoids::$variant(&dist, &mut meds, max_iter, &mut rnd)
     });
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).to_object(py))
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).to_object(py))
+    })
 }
 }}
 par_call!(par_fasterpam_f32, par_fasterpam, f32, f64);
@@ -132,9 +132,9 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, k: usize) -> PyResult<Py<PyAny>> {
     assert_eq!(dist.ndim(), 2);
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let (loss, assi, meds): ($ltype, _, _) = rustkmedoids::pam_build(&dist.as_array(), k);
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), 1).to_object(py))
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), 1).to_object(py))
+    })
 }
 }}
 pam_build_call!(pam_build_f32, f32, f64);
@@ -160,9 +160,9 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, m
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let mut meds = meds.to_vec()?;
     let (loss, assi, n_iter): ($ltype, _, _) = rustkmedoids::alternating(&dist.as_array(), &mut meds, max_iter);
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter).to_object(py))
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter).to_object(py))
+    })
 }
 }}
 alternating_call!(alternating_f32, f32, f64);
@@ -187,9 +187,9 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, assi: PyReadonlyArray1<'_, usize>, s
     assert_eq!(dist.ndim(), 2);
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let (sil, sils): (f64, _) = rustkmedoids::silhouette(&dist.as_array(), &assi.to_vec()?, samples);
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    Ok((sil, PyArray1::from_vec(py, sils)).to_object(py))
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+      Ok((sil, PyArray1::from_vec(py, sils)).to_object(py))
+    })
 }
 }}
 silhouette_call!(silhouette_f32, f32);

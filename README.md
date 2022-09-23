@@ -22,11 +22,12 @@ an earlier (slower, and now obsolete) version was published as:
 This is a port of the original Java code from [ELKI](https://elki-project.github.io/) to Rust.
 The [Rust version](https://github.com/kno10/rust-kmedoids) is then wrapped for use with Python.
 
-For further details on the implemented algorithm FasterMSC, see:
+For further details on medoid Silhouette clustering with FasterMSC, see:
 
-> Lars Lenssen, Erich Schubert  
+> Lars Lenssen, Erich Schubert:  
 > **Clustering by Direct Optimization of the Medoid Silhouette**  
-> In: 15th International Conference on Similarity Search and Applications (SISAP 2022)
+> In: 15th International Conference on Similarity Search and Applications (SISAP 2022)  
+> <https://doi.org/10.1007/978-3-031-17849-8_15>
 
 If you use this code in scientific work, please cite above papers. Thank you.
 
@@ -64,6 +65,7 @@ maturin develop --release
 ```
 Integration test to validate the installation.
 ```sh
+pip install numpy
 python -m unittest discover tests
 ```
 

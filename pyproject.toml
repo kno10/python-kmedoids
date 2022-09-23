@@ -1,3 +1,22 @@
 [build-system]
-requires = ["maturin>=0.11,<0.12"]
+requires = ["maturin>=0.13,<0.14"]
 build-backend = "maturin"
+
+[project]
+name = "kmedoids"
+version = "0.4.0"
+description = "k-Medoids Clustering in Python with FasterPAM"
+requires-dist = ["numpy"]
+classifier = [
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Programming Language :: Python",
+        "Programming Language :: Rust",
+        "Operating System :: POSIX",
+        "Operating System :: MacOS",
+        "Operating System :: Microsoft :: Windows",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Software Development :: Libraries"
+]
+project-url = { "ReadTheDocs" = "https://python-kmedoids.readthedocs.io/", "Rust Source Code" = "https://github.com/kno10/rust-kmedoids" }
