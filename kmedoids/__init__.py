@@ -36,6 +36,7 @@ References:
 | Lars Lenssen, Erich Schubert:
 | Clustering by Direct Optimization of the Medoid Silhouette
 | In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
+| https://doi.org/10.1007/978-3-031-17849-8_15
 
 | Leonard Kaufman, Peter J. Rousseeuw:
 | Clustering by means of medoids.
@@ -460,6 +461,7 @@ def fastmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
 	| In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
+	| https://doi.org/10.1007/978-3-031-17849-8_15
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
@@ -503,6 +505,7 @@ def fastermsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
 	| In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
+	| https://doi.org/10.1007/978-3-031-17849-8_15
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
@@ -646,7 +649,7 @@ except ImportError:
 
 
 class KMedoids(SKLearnClusterer):
-	"""K-Medoids Clustering using PAM and FasterPAM (sklearn-compatible API).
+	"""K-Medoids Clustering using PAM, FasterPAM, and FasterMSC (sklearn-compatible API).
 
 	References:
 
@@ -665,6 +668,7 @@ class KMedoids(SKLearnClusterer):
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
 	| In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
+	| https://doi.org/10.1007/978-3-031-17849-8_15
 
 	| Leonard Kaufman, Peter J. Rousseeuw:
 	| Clustering by means of medoids.
@@ -760,7 +764,9 @@ class KMedoids(SKLearnClusterer):
 		else:
 			raise ValueError(
 				f"method={self.method} is not supported. Supported methods "
-				f"are 'fasterpam', 'fastpam1', 'pam' and 'alternate'."
+				f"are 'fasterpam', 'fastpam1', 'pam', 'alternate', "
+				f"'fastermsc', 'fastmsc', 'pamsil', and 'pammedsil'. "
+				f"Recommended values are 'fasterpam' for classic k-medoids and 'fastermsc' for Silhouette optimization."
 			)
 		self.labels_ = result.labels
 		self.medoid_indices_ = result.medoids

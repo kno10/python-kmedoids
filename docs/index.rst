@@ -137,7 +137,7 @@ PAM
 
 .. _Alternating:
 
-Alternating k=medoids (k-means style)
+Alternating k-medoids (k-means style)
 =====================================
 
 .. autofunction:: alternating
@@ -221,11 +221,12 @@ an earlier (slower, and now obsolete) version was published as:
      | https://doi.org/10.1007/978-3-030-32047-8_16  
      | Preprint: https://arxiv.org/abs/1810.05691
 
-For further details on the implemented algorithm FasterMSC, see:
+For further details on medoid Silhouette clustering with FasterMSC, see:
 
-	 | Lars Lenssen, Erich Schubert:
-	 | Clustering by Direct Optimization of the Medoid Silhouette
-	 | In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
+     | Lars Lenssen, Erich Schubert:  
+     | **Clustering by Direct Optimization of the Medoid Silhouette**  
+     | In: 15th International Conference on Similarity Search and Applications (SISAP 2022).  
+     | https://doi.org/10.1007/978-3-031-17849-8_15
 
 This is a port of the original Java code from `ELKI <https://elki-project.github.io/>`_ to Rust.
 The `Rust version <https://github.com/kno10/rust-kmedoids>`_ is then wrapped for use with Python.
