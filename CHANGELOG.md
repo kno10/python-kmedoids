@@ -2,6 +2,12 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.4.1 (2022-09-24)
+
+- drop a leftover println, remove Display/Debug traits
+- optimize marginally the MSC loss function computation
+- fix return value inconsistency in Python wrapper with n_cpu set
+
 ## kmedoids 0.4.0 (2022-09-24)
 
 - add clustering by optimizing the Silhouette: PAMSIL
