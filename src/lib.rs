@@ -225,6 +225,33 @@ par_silhouette_call!(par_silhouette_f64, f64);
 par_silhouette_call!(par_silhouette_i32, i32);
 // i64 not supported, as the f64 used internally may overflow
 
+macro_rules! medoid_silhouette_call {
+($name:ident, $type: ty) => {
+/// Run the Medoid Silhouette index evaluation for $type precision
+///
+/// :param dist: distance matrix
+/// :type dist: ndarray
+/// :param meds: medoids indexes
+/// :type meds: ndarray
+/// :param samples: return the per-point Medoid Silhouette values
+/// :type samples: bool
+/// :return: Medoid Silhouette evaluation result
+/// :rtype: pair of Medoid Silhouette score and Medoid Silhouette coefficients per point
+#[pyfunction]
+fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, samples: bool) -> PyResult<Py<PyAny>> {
+    assert_eq!(dist.ndim(), 2);
+    assert_eq!(dist.shape()[0], dist.shape()[1]);
+    let (sil, sils): (f64, _) = rustkmedoids::medoid_silhouette(&dist.as_array(), &meds.to_vec()?, samples);
+    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+      Ok((sil, PyArray1::from_vec(py, sils)).to_object(py))
+    })
+}
+}}
+medoid_silhouette_call!(medoid_silhouette_f32, f32);
+medoid_silhouette_call!(medoid_silhouette_f64, f64);
+medoid_silhouette_call!(medoid_silhouette_i32, i32);
+// i64 not supported, as the f64 used internally may overflow
+
 #[pymodule]
 #[allow(unused_variables)]
 fn kmedoids(py: Python, m: &PyModule) -> PyResult<()> {
@@ -263,6 +290,7 @@ fn kmedoids(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("_silhouette_f32", wrap_pyfunction!(silhouette_f32, m)?)?;
     m.add("_silhouette_f64", wrap_pyfunction!(silhouette_f64, m)?)?;
     m.add("_silhouette_i32", wrap_pyfunction!(silhouette_i32, m)?)?;
+    // not supported: m.add("_silhouette_i64", wrap_pyfunction!(silhouette_i64, m)?)?;
     m.add("_par_fasterpam_f32", wrap_pyfunction!(par_fasterpam_f32, m)?)?;
     m.add("_par_fasterpam_f64", wrap_pyfunction!(par_fasterpam_f64, m)?)?;
     m.add("_par_fasterpam_i32", wrap_pyfunction!(par_fasterpam_i32, m)?)?;
@@ -270,7 +298,11 @@ fn kmedoids(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("_par_silhouette_f32", wrap_pyfunction!(par_silhouette_f32, m)?)?;
     m.add("_par_silhouette_f64", wrap_pyfunction!(par_silhouette_f64, m)?)?;
     m.add("_par_silhouette_i32", wrap_pyfunction!(par_silhouette_i32, m)?)?;
-    // not supported: m.add("_silhouette_i64", wrap_pyfunction!(silhouette_i64, m)?)?;
+    // not supported: m.add("_üarsilhouette_i64", wrap_pyfunction!(par_silhouette_i64, m)?)?;
+    m.add("_medoid_silhouette_f32", wrap_pyfunction!(medoid_silhouette_f32, m)?)?;
+    m.add("_medoid_silhouette_f64", wrap_pyfunction!(medoid_silhouette_f64, m)?)?;
+    m.add("_medoid_silhouette_i32", wrap_pyfunction!(medoid_silhouette_i32, m)?)?;
+    // not supported: m.add("_medoid_silhouette_i64", wrap_pyfunction!(medoid_silhouette_i64, m)?)?;
     Ok(())
 }
 

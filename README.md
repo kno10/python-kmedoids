@@ -3,6 +3,13 @@
 This python package implements k-medoids clustering with PAM and variants of clustering by direct optimization of the (Medoid) Silhouette.
 It can be used with arbitrary dissimilarites, as it requires a dissimilarity matrix as input.
 
+This software package has been introduced in JOSS:
+
+> Erich Schubert and Lars Lenssen  
+> **Fast k-medoids Clustering in Rust and Python**  
+> Journal of Open Source Software 7(75), 4183  
+> <https://doi.org/10.21105/joss.04183> (open access)
+
 For further details on the implemented algorithm FasterPAM, see:
 
 > Erich Schubert, Peter J. Rousseeuw  
@@ -120,10 +127,11 @@ print("Loss with PAM:", pam.loss)
 * PAM (Kaufman and Rousseeuw, 1987) with BUILD and SWAP
 * Alternating optimization (k-means-style algorithm)
 * Silhouette index for evaluation (Rousseeuw, 1987)
-* FasterMSC (Lenssen and Schubert, 2022)
+* **FasterMSC** (Lenssen and Schubert, 2022)
 * FastMSC (Lenssen and Schubert, 2022)
 * PAMSIL (Van der Laan and Pollard, 2003)
 * PAMMEDSIL (Van der Laan and Pollard, 2003)
+* Medoid Silhouette index for evaluation (Van der Laan and Pollard, 2003)
 
 Note that the k-means-like algorithm for k-medoids tends to find much worse solutions.
 

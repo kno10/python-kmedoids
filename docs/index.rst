@@ -7,6 +7,8 @@ This package is a wrapper around the fast
 `Rust k-medoids package <https://github.com/kno10/rust-kmedoids>`_,
 implementing the FasterPAM and FastPAM algorithms
 along with the baseline k-means-style and PAM algorithms.
+Furthermore, the (Medoid) Silhouette can be optimized by the
+FasterMSC, FastMSC, PAMMEDSIL and PAMSIL algorithms.
 
 All algorithms expect a *distance matrix* and the number of clusters as input.
 They hence can be used with arbitrary dissimilarity functions.
@@ -111,8 +113,10 @@ Implemented Algorithms
 * :ref:`FastMSC<fastmsc>` (Lenssen and Schubert, 2022)
 * :ref:`PAMSIL<pamsil>` (Van der Laan and Pollard, 2003)
 * :ref:`PAMMEDSIL<pammedsil>` (Van der Laan and Pollard, 2003)
+* :ref:`Medoid Silhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
 
-Note that the k-means style "alternating" algorithm yields rather poor result quality.
+Note that the k-means style "alternating" algorithm yields rather poor result quality
+(see Schubert and Rousseeuw 2021 for an example and explanation).
 
 .. _FasterPAM:
 
@@ -149,13 +153,6 @@ PAM BUILD
 
 .. autofunction:: pam_build
 
-.. _Silhouette:
-
-Silhouette
-=========
-
-.. autofunction:: silhouette
-
 .. _FasterMSC:
 
 FasterMSC
@@ -184,6 +181,20 @@ PAMMEDSIL
 
 .. autofunction:: pammedsil
 
+.. _Silhouette:
+
+Silhouette
+=========
+
+.. autofunction:: silhouette
+
+.. _MedoidSilhouette:
+
+Medoid Silhouette
+=================
+
+.. autofunction:: medoid_silhouette
+
 .. _KMedoidsResult:
 
 k-Medoids result object
@@ -204,6 +215,13 @@ sklearn-compatible API
 
 References
 ==========
+
+This software has been published in the Journal of Open-Source Software:
+
+     | Erich Schubert and Lars Lenssen:  
+     | **Fast k-medoids Clustering in Rust and Python**  
+     | Journal of Open Source Software 7(75), 4183  
+     | https://doi.org/10.21105/joss.04183 (open access)
 
 For further details on the implemented algorithm FasterPAM, see:
 
@@ -251,9 +269,3 @@ License: GPL-3 or later
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FAQ: Why GPL and not Apache/MIT/BSD?
-------------------------------------
-
-Because copyleft software like Linux is what built the open-source community.
-
-Tit for tat: you get to use my code, I get to use your code.

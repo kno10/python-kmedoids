@@ -21,6 +21,11 @@ in decreasing order of performance:
 
 References:
 
+| Erich Schubert and Lars Lenssen:
+| Fast k-medoids Clustering in Rust and Python
+| Journal of Open Source Software 7(75), 4183
+| https://doi.org/10.21105/joss.04183 (open access)
+
 | Erich Schubert, Peter J. Rousseeuw
 | Fast and Eager k-Medoids Clustering:
 | O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
@@ -603,7 +608,7 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 	:param n_cpu: number of threads to use (-1: automatic)
 	:type n_cpu: int
 
-	:return: tuple containing the overall silhouette and the individual samples
+	:return: tuple containing the average silhouette and the individual samples
 	:rtype: (float, ndarray)
 	"""
 	import numpy as np, os
@@ -613,7 +618,7 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 	if not isinstance(diss, np.ndarray):
 		diss = np.array(diss)
 	if not isinstance(labels, np.ndarray):
-		labels = np.array(labels, dtype=np.uint)
+		labels = np.array(labels, dtype=np.uint64)
 
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
@@ -623,11 +628,11 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 		if n_cpu > 1:
 			assert not samples, "samples=true currently may only be used with n_cpu=1"
 			if dtype == np.float32:
-				return _par_silhouette_f32(diss, labels.astype(np.uint64), n_cpu)
+				return (_par_silhouette_f32(diss, labels.astype(np.uint64), n_cpu), [])
 			elif dtype == np.float64:
-				return _par_silhouette_f64(diss, labels.astype(np.uint64), n_cpu)
+				return (_par_silhouette_f64(diss, labels.astype(np.uint64), n_cpu), [])
 			elif dtype == np.int32:
-				return _par_silhouette_i32(diss, labels.astype(np.uint64), n_cpu)
+				return (_par_silhouette_i32(diss, labels.astype(np.uint64), n_cpu), [])
 			elif dtype == np.int64:
 				raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
 		else:
@@ -639,6 +644,54 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 				return _silhouette_i32(diss, labels.astype(np.uint64), samples)
 			elif dtype == np.int64:
 				raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
+	raise ValueError("Input data not supported. Use a numpy array of floats.")
+
+def medoid_silhouette(diss, meds, samples=False):
+	"""Medoid Silhouette index for cluster evaluation.
+
+	The Medoid Silhouette is an approximation to the Silhouette index, that
+	uses the distance to the cluster medoids instead of the average distance
+	to the other cluster members. If every point is assigned to the nearest
+	medoid, the Medoid Silhouette of a point reduces to 1-a/b where a is the
+	distance to the nearest, and b the distance to the second nearest medoid.
+	If b is 0, the Medoid Silhouette is 1.
+
+	This function assumes you already have a distance matrix. It is not necessary
+	to compute a distance matrix to evaluate the medoid silhouette -- only the
+	distances between points and medoids are necessary. If you do not have a
+	distance matrix, simply compute the medoid Silhouette directly, by computing
+	(1) the N x k distance matrix to the medoids, (2) finding the two smallest values
+	for each data point, and (3) computing the average of 1-a/b on these (with 0/0 as 0).
+	This can be implemented in a few lines with numpy easily.
+
+	:param diss: square numpy array of dissimilarities
+	:type diss: ndarray
+	:param meds: medoid indexes (k distinct values in 0 to n-1)
+	:type meds: ndarray of int
+	:param samples: whether to return individual samples or not
+	:type samples: boolean
+
+	:return: tuple containing the average Medoid Silhouette and the individual samples
+	:rtype: (float, ndarray)
+	"""
+	import numpy as np, os
+	from .kmedoids import _medoid_silhouette_i32, _medoid_silhouette_f32, _medoid_silhouette_f64
+
+	if not isinstance(diss, np.ndarray):
+		diss = np.array(diss)
+	if not isinstance(meds, np.ndarray):
+		meds = np.array(meds, dtype=np.uint64)
+
+	if isinstance(diss, np.ndarray):
+		dtype = diss.dtype
+		if dtype == np.float32:
+			return _medoid_silhouette_f32(diss, meds.astype(np.uint64), samples)
+		elif dtype == np.float64:
+			return _medoid_silhouette_f64(diss, meds.astype(np.uint64), samples)
+		elif dtype == np.int32:
+			return _medoid_silhouette_i32(diss, meds.astype(np.uint64), samples)
+		elif dtype == np.int64:
+			raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 # This is a hack to make sklearn an optional dependency only:
@@ -655,8 +708,13 @@ class KMedoids(SKLearnClusterer):
 
 	References:
 
-	| Erich Schubert, Peter J. Rousseeuw
-	| Fast and Eager k-Medoids Clustering:
+	| Erich Schubert and Lars Lenssen:
+	| Fast k-medoids Clustering in Rust and Python
+	| Journal of Open Source Software 7(75), 4183
+	| https://doi.org/10.21105/joss.04183 (open access)
+
+	| Erich Schubert, Peter J. Rousseeuw:
+	| Fast and Eager k-Medoids Clustering
 	| O(k) Runtime Improvement of the PAM, CLARA, and CLARANS Algorithms
 	| Information Systems (101), 2021, 101804
 	| https://doi.org/10.1016/j.is.2021.101804 (open access)

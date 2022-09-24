@@ -2,9 +2,11 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
-## kmedoids 0.4.0 (2022-09-23)
+## kmedoids 0.4.0 (2022-09-24)
 
-- Add PAMSIL, PAMMEDSIL, FastMSC, FasterMSC (Lars Lenssen)
+- add clustering by optimizing the Silhouette: PAMSIL
+- add medoid silhouette
+- add medoid silhouette clustering: PAMMEDSIL, FastMSC, FasterMSC
 
 ## kmedoids 0.3.3 (2022-07-06)
 
