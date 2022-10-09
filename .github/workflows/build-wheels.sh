@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e -x
 
+curl https://sh.rustup.rs -sSf | sh -s -- -y
+source $HOME/.cargo/env
+rustup default stable
+
 # build wheels
 for PYBIN in /opt/python/cp3[891]*/bin; do
     "${PYBIN}/pip" install -r requirements.txt -r requirements-dev.txt
