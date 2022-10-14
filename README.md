@@ -56,6 +56,7 @@ On other architectures (Windows, OSX), you may need to first
 `pip install kmedoids` will try to compile the package for your CPU architecture and operating system.
 
 ### Compilation from source
+
 You need to have Python 3 installed.
 
 Unless you already have Rust, [install Rust/Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html).
@@ -82,6 +83,8 @@ by setting the `path=` option of the `kmedoids` dependency.
 
 ## Example
 
+Given a distance matrix `distmatrix`, cluster into `k = 5` clusters:
+
 ```python
 import kmedoids
 c = kmedoids.fasterpam(distmatrix, 5)
@@ -103,8 +106,7 @@ print("Loss is:", c.inertia_)
 ### MNIST (10k samples)
 
 ```python
-import kmedoids
-import numpy
+import kmedoids, numpy, time
 from sklearn.datasets import fetch_openml
 from sklearn.metrics.pairwise import euclidean_distances
 X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
