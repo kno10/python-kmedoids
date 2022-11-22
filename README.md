@@ -45,7 +45,7 @@ Full python documentation is included, and available on
 
 ## Installation
 
-### Installation with pip
+### Installation with `pip`
 
 Pre-built packages for many Linux systems with amd64 architecture are available
 in PyPI <https://pypi.org/project/kmedoids/> and can be installed with `pip install kmedoids`.
@@ -54,6 +54,10 @@ On other architectures (Windows, OSX), you may need to first
 [install Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html)
 (i.e., the Rust programming language) first, and a subsequent
 `pip install kmedoids` will try to compile the package for your CPU architecture and operating system.
+
+### Installation with `conda`
+
+Use the `conda-forge` channel to insall [`kmedoids`](https://anaconda.org/conda-forge/kmedoids) from conda: `conda install -c conda-forge kmedoids`.
 
 ### Compilation from source
 
