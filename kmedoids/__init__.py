@@ -804,7 +804,8 @@ class KMedoids(SKLearnClusterer):
 
 		if self.metric != "precomputed":
 			from sklearn.metrics.pairwise import pairwise_distances
-			X = pairwise_distances(X, metric=self.metric, *self.metric_params)
+			Xd	= X
+			X = pairwise_distances(X, metric=self.metric)
 		if self.method == "fasterpam":
 			result = fasterpam(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "fastpam1":
@@ -834,7 +835,7 @@ class KMedoids(SKLearnClusterer):
 		if self.metric == "precomputed":
 			self.cluster_centers_ = None
 		else:
-			self.cluster_centers_ = X[result.medoids]
+			self.cluster_centers_ = Xd[result.medoids]
 		return self
 
 	def predict(self, X):
@@ -847,10 +848,12 @@ class KMedoids(SKLearnClusterer):
 		:rtype: array, shape = (n_query,)
 		"""
 		if self.metric != "precomputed":
-			from sklearn.metrics.pairwise import pairwise_distances
-			X = pairwise_distances(X, metric=self.metric)
-		import numpy as np
-		return np.argmin(X[:, self.medoid_indices_], axis=1)
+			from sklearn.metrics.pairwise import pairwise_distances_argmin
+			Y = self.cluster_centers_
+			X = pairwise_distances_argmin(X, Y=Y, metric=self.metric)
+		else:
+			raise NotImplementedError("This API is not safe to use with precomputed distances. Use the argmin of the distances to the medoids.")
+		return self.medoid_indices_[X]
 
 	def transform(self, X):
 		"""Transforms X to cluster-distance space.
