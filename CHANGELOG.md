@@ -2,6 +2,12 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.4.2 (2023-03-07)
+
+- fix predict for non-precomputed distances
+- add CITATION.cff for github
+- update dependency versions
+
 ## kmedoids 0.4.1 (2022-09-24)
 
 - drop a leftover println, remove Display/Debug traits

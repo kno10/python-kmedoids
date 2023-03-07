@@ -1,0 +1,57 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Schubert
+    given-names: Erich
+    orcid: 0000-0001-9143-4880
+  - family-names: Lenssen
+    given-names: Lars
+    orcid: 0000-0003-0037-0418
+title: "Fast k-medoids Clustering in Rust and Python"
+journal: "J. Open Source Softw."
+doi: 10.21105/joss.04183
+version: 0.4.2
+date-released: 2022-09-24
+license: GPL-3.0
+preferred-citation:
+  title: "Fast k-medoids Clustering in Rust and Python"
+  year: "2022"
+  type: article
+  journal: "J. Open Source Softw."
+  doi: 10.21105/joss.04183
+  authors:
+    - family-names: Schubert
+      given-names: Erich
+    - family-names: Lenssen
+      given-names: Lars
+references:
+- title: "Faster k-Medoids Clustering: Improving the PAM, CLARA, and CLARANS Algorithms"
+  doi: "10.1007/978-3-030-32047-8_16"
+  year: "2019"
+  type: conference-paper
+  conference: "Similarity Search and Applications - 12th International Conference, SISAP 2019, Newark, NJ, USA, October 2-4, 2019, Proceedings"
+  authors:
+    - family-names: Schubert
+      given-names: Erich
+    - family-names: Rousseeuw
+      given-names: Peter J.
+- title: "Fast and eager k-medoids clustering: O(k) runtime improvement of the PAM, CLARA, and CLARANS algorithms"
+  doi: "10.1016/j.is.2021.101804"
+  year: "2021"
+  type: article
+  journal: "Inf. Syst."
+  authors:
+    - family-names: Schubert
+      given-names: Erich
+    - family-names: Rousseeuw
+      given-names: Peter J.
+- title: "Clustering by Direct Optimization of the Medoid Silhouette"
+  doi: "10.1007/978-3-031-17849-8_15"
+  year: "2022"
+  type: conference-paper
+  conference: "Similarity Search and Applications - 15th International Conference, SISAP 2022, Bologna, Italy, October 5-7, 2022, Proceedings"
+  authors:
+    - family-names: Lenssen
+      given-names: Lars
+    - family-names: Schubert
+      given-names: Erich
