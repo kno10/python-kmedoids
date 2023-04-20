@@ -47,7 +47,7 @@ class Test_kmedoids(unittest.TestCase):
         dist = np.array([[0, 2, 3, 4, 5], [2, 0, 6, 7, 8], [3, 6, 0, 9, 10], [4, 7, 9, 0, 11], [5, 8, 10, 11, 0]], dtype=np.float32)
         pamsil = kmedoids.pamsil(dist, 2)
         pamsil_rust = kmedoids.kmedoids._pamsil_swap_f32(dist, pamsil.medoids, 100)
-        assert pamsil.loss == 0.5137878787878788
+        assert pamsil.loss == 0.3137878787878788
         assert pamsil.loss == pamsil_rust[0]
         assert np.array_equal(pamsil.medoids, pamsil_rust[2])
 

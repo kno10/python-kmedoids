@@ -617,8 +617,7 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 
 	if not isinstance(diss, np.ndarray):
 		diss = np.array(diss)
-	if not isinstance(labels, np.ndarray):
-		labels = np.array(labels, dtype=np.uint64)
+	labels = np.unique(labels, return_inverse=True)[1].astype(np.uint64) # ensure labels are 0..k-1
 
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
@@ -628,20 +627,20 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 		if n_cpu > 1:
 			assert not samples, "samples=true currently may only be used with n_cpu=1"
 			if dtype == np.float32:
-				return (_par_silhouette_f32(diss, labels.astype(np.uint64), n_cpu), [])
+				return (_par_silhouette_f32(diss, labels, n_cpu), [])
 			elif dtype == np.float64:
-				return (_par_silhouette_f64(diss, labels.astype(np.uint64), n_cpu), [])
+				return (_par_silhouette_f64(diss, labels, n_cpu), [])
 			elif dtype == np.int32:
-				return (_par_silhouette_i32(diss, labels.astype(np.uint64), n_cpu), [])
+				return (_par_silhouette_i32(diss, labels, n_cpu), [])
 			elif dtype == np.int64:
 				raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
 		else:
 			if dtype == np.float32:
-				return _silhouette_f32(diss, labels.astype(np.uint64), samples)
+				return _silhouette_f32(diss, labels, samples)
 			elif dtype == np.float64:
-				return _silhouette_f64(diss, labels.astype(np.uint64), samples)
+				return _silhouette_f64(diss, labels, samples)
 			elif dtype == np.int32:
-				return _silhouette_i32(diss, labels.astype(np.uint64), samples)
+				return _silhouette_i32(diss, labels, samples)
 			elif dtype == np.int64:
 				raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
 	raise ValueError("Input data not supported. Use a numpy array of floats.")

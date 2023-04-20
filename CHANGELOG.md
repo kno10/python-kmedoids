@@ -2,6 +2,11 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.4.3 (2023-04-20)
+
+- fix silhouette evaluation for k > 2 (in Rust)
+- use np.unique in Python wrapper to ensure labels are 0..k
+
 ## kmedoids 0.4.2 (2023-03-07)
 
 - fix predict for non-precomputed distances

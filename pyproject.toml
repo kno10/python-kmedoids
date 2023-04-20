@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "kmedoids"
-version = "0.4.2"
+version = "0.4.3"
 description = "k-Medoids Clustering in Python with FasterPAM"
 requires-dist = ["numpy"]
 classifier = [
