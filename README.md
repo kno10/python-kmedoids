@@ -1,6 +1,6 @@
 # k-Medoids Clustering in Python with FasterPAM
 
-[![PyPI version](https://badge.fury.io/py/kmedoids.svg)](https://badge.fury.io/py/kmedoids)
+[![PyPI version](https://badge.fury.io/py/kmedoids.svg)](https://pypi.org/project/kmedoids/)
 [![Conda Version](https://anaconda.org/conda-forge/kmedoids/badges/version.svg)](https://anaconda.org/conda-forge/kmedoids)
 [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/kmedoids.svg)](https://anaconda.org/conda-forge/kmedoids)
 
@@ -54,8 +54,9 @@ Full python documentation is included, and available on
 Pre-built packages for many Linux, Windows, and OSX systems are available
 in [PyPI](https://pypi.org/project/kmedoids/) and
 [conda-forge](https://anaconda.org/conda-forge/kmedoids)
-can be installed with `pip install kmedoids` respectively
-`conda install -c conda-forge kmedoids`.
+can be installed with
+* `pip install kmedoids` respectively
+* `conda install -c conda-forge kmedoids`.
 
 On uncommon architectures, you may need to first
 [install Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html)
@@ -129,7 +130,7 @@ print("PAM took: %.2f ms" % ((time.time() - start)*1000))
 print("Loss with PAM:", pam.loss)
 ```
 
-## Memory Requirements
+### Memory Requirements
 
 Because the algorithms require a distance matrix as input, you need O(N²) memory to use these implementations. With single precision, this matrix needs 4·N² bytes, so a typical laptop with 8 GB of RAM could handle data sets of over 40.000 instances, but if your computation of the distance matrix incurs copying the matrix, only 30.000 or less may be feasible.
 
