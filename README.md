@@ -1,5 +1,9 @@
 # k-Medoids Clustering in Python with FasterPAM
 
+[![PyPI version](https://badge.fury.io/py/kmedoids.svg)](https://badge.fury.io/py/kmedoids)
+[![Conda Version](https://anaconda.org/conda-forge/kmedoids/badges/version.svg)](https://anaconda.org/conda-forge/kmedoids)
+[![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/kmedoids.svg)](https://anaconda.org/conda-forge/kmedoids)
+
 This python package implements k-medoids clustering with PAM and variants of clustering by direct optimization of the (Medoid) Silhouette.
 It can be used with arbitrary dissimilarites, as it requires a dissimilarity matrix as input.
 
@@ -124,6 +128,14 @@ pam = kmedoids.pam(diss, 100)
 print("PAM took: %.2f ms" % ((time.time() - start)*1000))
 print("Loss with PAM:", pam.loss)
 ```
+
+## Memory Requirements
+
+Because the algorithms require a distance matrix as input, you need O(N²) memory to use these implementations. With single precision, this matrix needs 4·N² bytes, so a typical laptop with 8 GB of RAM could handle data sets of over 40.000 instances, but if your computation of the distance matrix incurs copying the matrix, only 30.000 or less may be feasible.
+
+The majority of run time usually is the distance matrix computation, so it is recommended you only compute it once, then experiment with different algorithm settings. Avoid recomputing it repeatedly.
+
+For larger data sets, it is recommended to only cluster a representative sample of the data. Usually, this will still yield sufficient result quality.
 
 ## Implemented Algorithms
 
