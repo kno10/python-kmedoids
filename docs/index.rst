@@ -22,10 +22,25 @@ If you use this code in scientific work, please cite the papers in the :ref:`Ref
 Installation
 ============
 
-Installation with pip
----------------------
+.. image:: https://badge.fury.io/py/kmedoids.svg
+   :alt: PyPI version
+   :target: https://pypi.org/project/kmedoids/
+.. image:: https://anaconda.org/conda-forge/kmedoids/badges/version.svg
+   :alt: Conda Version
+   :target: https://anaconda.org/conda-forge/kmedoids
+.. image:: https://img.shields.io/conda/pn/conda-forge/kmedoids.svg
+   :alt: Conda Platforms
+   :target: https://anaconda.org/conda-forge/kmedoids
 
-Pre-built packages are on PyPi https://pypi.org/project/kmedoids/ and can be installed with :kbd:`pip install kmedoids`.
+Installation with pip or conda
+------------------------------
+
+Pre-built packages for many Linux, Windows, and OSX systems are available in PyPI and conda-forge can be installed with
+
+- :kbd:`pip install kmedoids` respectively
+- :kbd:`conda install -c conda-forge kmedoids`.
+
+On uncommon architectures, you may need to first install Cargo (i.e., the Rust programming language) first, and a subsequent pip install kmedoids will try to compile the package for your CPU architecture and operating system.
 
 Compilation from source
 -----------------------
@@ -99,6 +114,14 @@ MNIST (10k samples)
 	print("PAM took: %.2f ms" % ((time.time() - start)*1000))
 	print("Loss with PAM:", pam.loss)
 
+Memory Requirements
+-------------------
+
+Because the algorithms require a distance matrix as input, you need O(N²) memory to use these implementations. With single precision, this matrix needs 4·N² bytes, so a typical laptop with 8 GB of RAM could handle data sets of over 40.000 instances, but if your computation of the distance matrix incurs copying the matrix, only 30.000 or less may be feasible.
+
+The majority of run time usually is the distance matrix computation, so it is recommended you only compute it once, then experiment with different algorithm settings. Avoid recomputing it repeatedly.
+
+For larger data sets, it is recommended to only cluster a representative sample of the data. Usually, this will still yield sufficient result quality.
 
 Implemented Algorithms
 ======================
