@@ -48,6 +48,8 @@ variant_call!(fastmsc_f32, fastmsc, f32, f64);
 variant_call!(fastmsc_f64, fastmsc, f64, f64);
 variant_call!(fastermsc_f32, fastermsc, f32, f64);
 variant_call!(fastermsc_f64, fastermsc, f64, f64);
+variant_call!(dynmsc_f32, dynmsc, f32, f64);
+variant_call!(dynmsc_f64, dynmsc, f64, f64);
 
 macro_rules! rand_call {
 ($name:ident, $variant:ident, $type: ty, $ltype: ty) => {
@@ -271,6 +273,8 @@ fn kmedoids(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("_fastmsc_f64", wrap_pyfunction!(fastmsc_f64, m)?)?;
     m.add("_fastermsc_f32", wrap_pyfunction!(fastermsc_f32, m)?)?;
     m.add("_fastermsc_f64", wrap_pyfunction!(fastermsc_f64, m)?)?;
+    m.add("_dynmsc_f32", wrap_pyfunction!(dynmsc_f32, m)?)?;
+    m.add("_dynmsc_f64", wrap_pyfunction!(dynmsc_f64, m)?)?;
     m.add("_pam_swap_f32", wrap_pyfunction!(pam_swap_f32, m)?)?;
     m.add("_pam_swap_f64", wrap_pyfunction!(pam_swap_f64, m)?)?;
     m.add("_pam_swap_i32", wrap_pyfunction!(pam_swap_i32, m)?)?;
