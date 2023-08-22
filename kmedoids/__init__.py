@@ -16,6 +16,7 @@ in decreasing order of performance:
 
 - FasterMSC
 - FastMSC (same result as PAMMEDSIL; but faster)
+- DynMSC
 - PAMMEDSIL
 - PAMSIL
 
@@ -37,6 +38,10 @@ References:
 | In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.
 | https://doi.org/10.1007/978-3-030-32047-8_16
 | Preprint: https://arxiv.org/abs/1810.05691
+
+| Lars Lenssen, Erich Schubert:
+| Medoid silhouette clustering with automatic cluster number selection
+| Preprint: <https://arxiv.org/abs/2309.03751>
 
 | Lars Lenssen, Erich Schubert:
 | Clustering by Direct Optimization of the Medoid Silhouette
@@ -67,6 +72,8 @@ __all__ = [
 	"fastpam1",
 	"fasterpam",
 	"fastmsc",
+	"fastermsc",
+	"dynmsc",
 	"alternating",
 	"pam_build",
 	"silhouette",
@@ -466,6 +473,11 @@ def fastmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	References:
 
 	| Lars Lenssen, Erich Schubert:
+	| Medoid silhouette clustering with automatic cluster number selection
+	| Information Systems (?), 2023, ?
+	| ? (open access)
+
+	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
 	| In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
 	| https://doi.org/10.1007/978-3-031-17849-8_15
@@ -510,6 +522,11 @@ def fastermsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	References:
 
 	| Lars Lenssen, Erich Schubert:
+	| Medoid silhouette clustering with automatic cluster number selection
+	| Information Systems (?), 2023, ?
+	| ? (open access)
+
+	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
 	| In: 15th International Conference on Similarity Search and Applications (SISAP 2022).
 	| https://doi.org/10.1007/978-3-031-17849-8_15
@@ -542,6 +559,50 @@ def fastermsc(diss, medoids, max_iter=100, init="random", random_state=None):
 			return KMedoidsResult(*_fastermsc_f32(diss, medoids.astype(np.uint64), max_iter))
 		elif dtype == np.float64:
 			return KMedoidsResult(*_fastermsc_f64(diss, medoids.astype(np.uint64), max_iter))
+	raise ValueError("Input data not supported. Use a numpy array of floats.")
+
+def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
+	"""DynMSC clustering
+
+	This is a version of FasterMSC with automatic cluster number selection, that
+	performs FasterMSC for k = 2 to the number of input medoids and returns
+	the clustering with the highest Average Medoid Silhouette.
+
+	References:
+
+	| Lars Lenssen, Erich Schubert:
+	| Medoid silhouette clustering with automatic cluster number selection
+	| Information Systems (?), 2023, ?
+	| ? (open access)
+
+	:param diss: square numpy array of dissimilarities
+	:type diss: ndarray
+	:param medoids:  maximum number of clusters to find or existing medoids with length of maximum number of clusters to find
+	:type medoids: int or ndarray
+	:param max_iter: maximum number of iterations
+	:type max_iter: int
+	:param init: initialization method
+	:type init: str, "random", "first" or "build"
+	:param random_state: random seed if no medoids are given
+	:type random_state: int, RandomState instance or None
+
+	:return: k-medoids clustering result
+	:rtype: KMedoidsResult
+	"""
+	import numpy as np
+	from .kmedoids import _dynmsc_f32, _dynmsc_f64
+
+	if not isinstance(diss, np.ndarray):
+		diss = np.array(diss)
+
+	medoids = _check_medoids(diss, medoids, init, random_state)
+
+	if isinstance(diss, np.ndarray):
+		dtype = diss.dtype
+		if dtype == np.float32:
+			return KMedoidsResult(*_dynmsc_f32(diss, medoids.astype(np.uint64), max_iter))
+		elif dtype == np.float64:
+			return KMedoidsResult(*_dynmsc_f64(diss, medoids.astype(np.uint64), max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def alternating(diss, medoids, max_iter=100, init="random", random_state=None):
@@ -813,6 +874,8 @@ class KMedoids(SKLearnClusterer):
 			result = pam(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "fastermsc":
 			result = fastermsc(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
+		elif self.method == "dynmsc":
+			result = dynmsc(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "fastmsc":
 			result = fastmsc(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "pamsil":
@@ -825,7 +888,7 @@ class KMedoids(SKLearnClusterer):
 			raise ValueError(
 				f"method={self.method} is not supported. Supported methods "
 				f"are 'fasterpam', 'fastpam1', 'pam', 'alternate', "
-				f"'fastermsc', 'fastmsc', 'pamsil', and 'pammedsil'. "
+				f"'fastermsc', 'fastmsc', 'dynmsc', 'pamsil', and 'pammedsil'. "
 				f"Recommended values are 'fasterpam' for classic k-medoids and 'fastermsc' for Silhouette optimization."
 			)
 		self.labels_ = result.labels

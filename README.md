@@ -33,7 +33,13 @@ an earlier (slower, and now obsolete) version was published as:
 This is a port of the original Java code from [ELKI](https://elki-project.github.io/) to Rust.
 The [Rust version](https://github.com/kno10/rust-kmedoids) is then wrapped for use with Python.
 
-For further details on medoid Silhouette clustering with FasterMSC, see:
+For further details on medoid Silhouette clustering with automatic cluster number selection (FasterMSC, DynMSC), see:
+
+> Lars Lenssen, Erich Schubert:  
+> **Medoid silhouette clustering with automatic cluster number selection**  
+> Preprint: <https://arxiv.org/abs/2309.03751>
+
+an earlier version was published as:
 
 > Lars Lenssen, Erich Schubert:  
 > **Clustering by Direct Optimization of the Medoid Silhouette**  
@@ -147,6 +153,7 @@ For larger data sets, it is recommended to only cluster a representative sample 
 * Silhouette index for evaluation (Rousseeuw, 1987)
 * **FasterMSC** (Lenssen and Schubert, 2022)
 * FastMSC (Lenssen and Schubert, 2022)
+* DynMSC (Lenssen and Schubert, 2023)
 * PAMSIL (Van der Laan and Pollard, 2003)
 * PAMMEDSIL (Van der Laan and Pollard, 2003)
 * Medoid Silhouette index for evaluation (Van der Laan and Pollard, 2003)

@@ -134,6 +134,7 @@ Implemented Algorithms
 * :ref:`Silhouette<silhouette>` (Kaufman and Rousseeuw, 1987)
 * :ref:`FasterMSC<fastermsc>` (Lenssen and Schubert, 2022)
 * :ref:`FastMSC<fastmsc>` (Lenssen and Schubert, 2022)
+* :ref:`DynMSC<dynmsc>` (Lenssen and Schubert, 2023)
 * :ref:`PAMSIL<pamsil>` (Van der Laan and Pollard, 2003)
 * :ref:`PAMMEDSIL<pammedsil>` (Van der Laan and Pollard, 2003)
 * :ref:`Medoid Silhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
@@ -189,6 +190,13 @@ FastMSC
 =========
 
 .. autofunction:: fastmsc
+
+.. _DynMSC:
+
+DynMSC
+=========
+
+.. autofunction:: dynmsc
 
 .. _PAMSIL:
 
@@ -262,7 +270,13 @@ an earlier (slower, and now obsolete) version was published as:
      | https://doi.org/10.1007/978-3-030-32047-8_16  
      | Preprint: https://arxiv.org/abs/1810.05691
 
-For further details on medoid Silhouette clustering with FasterMSC, see:
+For further details on medoid Silhouette clustering with automatic cluster number selection (FasterMSC, DynMSC), see:
+
+     | Lars Lenssen, Erich Schubert:
+     | **Medoid silhouette clustering with automatic cluster number selection**
+     | Preprint: <https://arxiv.org/abs/2309.03751>
+
+an earlier version was published as:
 
      | Lars Lenssen, Erich Schubert:  
      | **Clustering by Direct Optimization of the Medoid Silhouette**  
