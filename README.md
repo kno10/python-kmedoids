@@ -35,8 +35,8 @@ The [Rust version](https://github.com/kno10/rust-kmedoids) is then wrapped for u
 
 For further details on medoid Silhouette clustering with automatic cluster number selection (FasterMSC, DynMSC), see:
 
-> Lars Lenssen, Erich Schubert:
-> **Medoid silhouette clustering with automatic cluster number selection**
+> Lars Lenssen, Erich Schubert:  
+> **Medoid silhouette clustering with automatic cluster number selection**  
 > Preprint: <https://arxiv.org/abs/2309.03751>
 
 an earlier version was published as:
