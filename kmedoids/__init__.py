@@ -41,8 +41,7 @@ References:
 
 | Lars Lenssen, Erich Schubert:
 | Medoid silhouette clustering with automatic cluster number selection
-| Information Systems (?), 2023, ?
-| ? (open access)
+| Preprint: <https://arxiv.org/abs/2309.03751>
 
 | Lars Lenssen, Erich Schubert:
 | Clustering by Direct Optimization of the Medoid Silhouette
