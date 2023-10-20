@@ -217,7 +217,7 @@ DynMSC
 
 .. _Bestk:
 
-DynMSC
+Bestk
 =========
 
 .. autofunction:: bestk
