@@ -151,6 +151,7 @@ Implemented Algorithms
 * :ref:`FasterMSC<fastermsc>` (Lenssen and Schubert, 2022)
 * :ref:`FastMSC<fastmsc>` (Lenssen and Schubert, 2022)
 * :ref:`DynMSC<dynmsc>` (Lenssen and Schubert, 2023)
+* :ref:`Bestk<bestk>` (Lenssen and Schubert, 2023)
 * :ref:`PAMSIL<pamsil>` (Van der Laan and Pollard, 2003)
 * :ref:`PAMMEDSIL<pammedsil>` (Van der Laan and Pollard, 2003)
 * :ref:`Medoid Silhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
@@ -213,6 +214,13 @@ DynMSC
 =========
 
 .. autofunction:: dynmsc
+
+.. _Bestk:
+
+DynMSC
+=========
+
+.. autofunction:: bestk
 
 .. _PAMSIL:
 

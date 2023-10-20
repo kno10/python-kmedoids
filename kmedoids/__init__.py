@@ -113,7 +113,7 @@ class KMedoidsResult:
 
 class BestkResult:
 	"""
-	Result of calculation the best number of cluster by the Medoid Silhoutte
+	Result of choosing the optimal number of clusters according to the Medoid Silhouette.
 
 	:param bestk: Best k by Medoid Silhouette
 	:type bestk: int
@@ -629,11 +629,11 @@ def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def bestk(diss, medoids=100, max_iter=100, init="random", random_state=None):
-	"""DynMSC clustering
+	"""Optimal number of clusters according to the Medoid Silhouette
 
-	This is a version of FasterMSC with automatic cluster number selection, that
-	performs FasterMSC for k = 2 to the number of input medoids and returns
-	the clustering with the highest Average Medoid Silhouette.
+	This version uses DynMSC to choose the ptimal number of clusters according
+	to the Medoid Silhouette, that performs DynMSC for k = 2 to the number of input medoids
+	and returns k with the highest Average Medoid Silhouette.
 
 	References:
 
@@ -653,8 +653,8 @@ def bestk(diss, medoids=100, max_iter=100, init="random", random_state=None):
 	:param random_state: random seed if no medoids are given
 	:type random_state: int, RandomState instance or None
 
-	:return: k-medoids clustering result
-	:rtype: KMedoidsResult
+	:return: Result of choosing the optimal number of clusters according to the Medoid Silhouette
+	:rtype: BestkResult
 	"""
 	import numpy as np
 	from .kmedoids import _bestk_f32, _bestk_f64
