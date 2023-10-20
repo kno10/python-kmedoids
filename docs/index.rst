@@ -125,10 +125,10 @@ Choose the optimal number of clusters
     X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
     X = X[:10000]
     diss = euclidean_distances(X)
-    bk = kmedoids.bestk(diss, 100)
-    print("Optimal number of clusters according to the Medoid Silhouette:", bk.bestk)
-    print("Medoid Silhouette over range of k:", bk.losses)
-    print("Range of k:", bk.rangek)
+    dm = kmedoids.dynmsc(diss, 100)
+    print("Optimal number of clusters according to the Medoid Silhouette:", dm.bestk)
+    print("Medoid Silhouette over range of k:", dm.losses)
+    print("Range of k:", dm.rangek)
 
 Memory Requirements
 -------------------
@@ -151,10 +151,9 @@ Implemented Algorithms
 * :ref:`FasterMSC<fastermsc>` (Lenssen and Schubert, 2022)
 * :ref:`FastMSC<fastmsc>` (Lenssen and Schubert, 2022)
 * :ref:`DynMSC<dynmsc>` (Lenssen and Schubert, 2023)
-* :ref:`Bestk<bestk>` (Lenssen and Schubert, 2023)
 * :ref:`PAMSIL<pamsil>` (Van der Laan and Pollard, 2003)
 * :ref:`PAMMEDSIL<pammedsil>` (Van der Laan and Pollard, 2003)
-* :ref:`Medoid Silhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
+* :ref:`MedoidSilhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
 
 Note that the k-means style "alternating" algorithm yields rather poor result quality
 (see Schubert and Rousseeuw 2021 for an example and explanation).
@@ -214,13 +213,6 @@ DynMSC
 =========
 
 .. autofunction:: dynmsc
-
-.. _Bestk:
-
-DynMSC
-=========
-
-.. autofunction:: bestk
 
 .. _PAMSIL:
 

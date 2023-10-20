@@ -1,2 +1,3 @@
 kmedoids
 scikit-learn
+sphinx-rtd-theme
