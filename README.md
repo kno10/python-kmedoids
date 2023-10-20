@@ -136,6 +136,21 @@ print("PAM took: %.2f ms" % ((time.time() - start)*1000))
 print("Loss with PAM:", pam.loss)
 ```
 
+### Choose the optimal number of clusters
+
+```python
+import kmedoids, numpy
+from sklearn.datasets import fetch_openml
+from sklearn.metrics.pairwise import euclidean_distances
+X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
+X = X[:10000]
+diss = euclidean_distances(X)
+bk = kmedoids.bestk(diss, 100)
+print("Optimal number of clusters according to the Medoid Silhouette:", bk.bestk)
+print("Medoid Silhouette over range of k:", bk.losses)
+print("Range of k:", bk.rangek)
+```
+
 ### Memory Requirements
 
 Because the algorithms require a distance matrix as input, you need O(N²) memory to use these implementations. With single precision, this matrix needs 4·N² bytes, so a typical laptop with 8 GB of RAM could handle data sets of over 40.000 instances, but if your computation of the distance matrix incurs copying the matrix, only 30.000 or less may be feasible.

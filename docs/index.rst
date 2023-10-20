@@ -114,6 +114,22 @@ MNIST (10k samples)
 	print("PAM took: %.2f ms" % ((time.time() - start)*1000))
 	print("Loss with PAM:", pam.loss)
 
+Choose the optimal number of clusters
+-------------------
+
+.. code-block:: python
+
+    import kmedoids, numpy
+    from sklearn.datasets import fetch_openml
+    from sklearn.metrics.pairwise import euclidean_distances
+    X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
+    X = X[:10000]
+    diss = euclidean_distances(X)
+    bk = kmedoids.bestk(diss, 100)
+    print("Optimal number of clusters according to the Medoid Silhouette:", bk.bestk)
+    print("Medoid Silhouette over range of k:", bk.losses)
+    print("Range of k:", bk.rangek)
+
 Memory Requirements
 -------------------
 
@@ -274,7 +290,8 @@ For further details on medoid Silhouette clustering with automatic cluster numbe
 
      | Lars Lenssen, Erich Schubert:
      | **Medoid silhouette clustering with automatic cluster number selection**
-     | Preprint: <https://arxiv.org/abs/2309.03751>
+     | Information Systems (120), 2024, 102290
+     | https://doi.org/10.1016/j.is.2023.102290
 
 an earlier version was published as:
 
