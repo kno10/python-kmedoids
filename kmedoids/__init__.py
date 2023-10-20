@@ -41,7 +41,8 @@ References:
 
 | Lars Lenssen, Erich Schubert:
 | Medoid silhouette clustering with automatic cluster number selection
-| Preprint: <https://arxiv.org/abs/2309.03751>
+| Information Systems (120), 2024, 102290
+| <https://doi.org/10.1016/j.is.2023.102290>
 
 | Lars Lenssen, Erich Schubert:
 | Clustering by Direct Optimization of the Medoid Silhouette
@@ -108,6 +109,28 @@ class KMedoidsResult:
 
 	def __repr__(self):
 		return f"KMedoidsResult(loss={self.loss}, labels={self.labels}, medoids={self.medoids}, n_iter={self.n_iter}, n_swaps={self.n_swap})"
+
+
+class BestkResult:
+	"""
+	Result of calculation the best number of cluster by the Medoid Silhoutte
+
+	:param bestk: Best k by Medoid Silhouette
+	:type bestk: int
+
+	:param losses: Medoid Silhouette over range of k
+	:type losses: ndarray
+
+	:param rangek: range of k
+	:type rangek: range
+	"""
+	def __init__(self, bestk, losses, rangek):
+		self.bestk = bestk
+		self.losses = losses
+		self.rangek = rangek
+
+	def __repr__(self):
+		return f"BestkResult(bestk={self.bestk}, losses={self.losses}, rangek={self.rangek})"
 
 def _check_medoids(diss, medoids, init, random_state):
 	"""Check the medoids and random_state parameters."""
@@ -474,8 +497,8 @@ def fastmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 
 	| Lars Lenssen, Erich Schubert:
 	| Medoid silhouette clustering with automatic cluster number selection
-	| Information Systems (?), 2023, ?
-	| ? (open access)
+	| Information Systems (120), 2024, 102290
+	| <https://doi.org/10.1016/j.is.2023.102290>
 
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
@@ -523,8 +546,8 @@ def fastermsc(diss, medoids, max_iter=100, init="random", random_state=None):
 
 	| Lars Lenssen, Erich Schubert:
 	| Medoid silhouette clustering with automatic cluster number selection
-	| Information Systems (?), 2023, ?
-	| ? (open access)
+	| Information Systems (120), 2024, 102290
+	| <https://doi.org/10.1016/j.is.2023.102290>
 
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
@@ -572,8 +595,8 @@ def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 
 	| Lars Lenssen, Erich Schubert:
 	| Medoid silhouette clustering with automatic cluster number selection
-	| Information Systems (?), 2023, ?
-	| ? (open access)
+	| Information Systems (120), 2024, 102290
+	| <https://doi.org/10.1016/j.is.2023.102290>
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
@@ -603,6 +626,50 @@ def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 			return KMedoidsResult(*_dynmsc_f32(diss, medoids.astype(np.uint64), max_iter))
 		elif dtype == np.float64:
 			return KMedoidsResult(*_dynmsc_f64(diss, medoids.astype(np.uint64), max_iter))
+	raise ValueError("Input data not supported. Use a numpy array of floats.")
+
+def bestk(diss, medoids=100, max_iter=100, init="random", random_state=None):
+	"""DynMSC clustering
+
+	This is a version of FasterMSC with automatic cluster number selection, that
+	performs FasterMSC for k = 2 to the number of input medoids and returns
+	the clustering with the highest Average Medoid Silhouette.
+
+	References:
+
+	| Lars Lenssen, Erich Schubert:
+	| Medoid silhouette clustering with automatic cluster number selection
+	| Information Systems (120), 2024, 102290
+	| <https://doi.org/10.1016/j.is.2023.102290>
+
+	:param diss: square numpy array of dissimilarities
+	:type diss: ndarray
+	:param medoids:  maximum number of clusters to find or existing medoids with length of maximum number of clusters to find
+	:type medoids: int or ndarray
+	:param max_iter: maximum number of iterations
+	:type max_iter: int
+	:param init: initialization method
+	:type init: str, "random", "first" or "build"
+	:param random_state: random seed if no medoids are given
+	:type random_state: int, RandomState instance or None
+
+	:return: k-medoids clustering result
+	:rtype: KMedoidsResult
+	"""
+	import numpy as np
+	from .kmedoids import _bestk_f32, _bestk_f64
+
+	if not isinstance(diss, np.ndarray):
+		diss = np.array(diss)
+
+	medoids = _check_medoids(diss, medoids, init, random_state)
+
+	if isinstance(diss, np.ndarray):
+		dtype = diss.dtype
+		if dtype == np.float32:
+			return BestkResult(*_bestk_f32(diss, medoids.astype(np.uint64), max_iter))
+		elif dtype == np.float64:
+			return BestkResult(*_bestk_f64(diss, medoids.astype(np.uint64), max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def alternating(diss, medoids, max_iter=100, init="random", random_state=None):
@@ -762,7 +829,6 @@ try:
 except ImportError:
 	SKLearnClusterer = object  # fallback if sklearn not available
 
-
 class KMedoids(SKLearnClusterer):
 	"""K-Medoids Clustering using PAM, FasterPAM, and FasterMSC (sklearn-compatible API).
 
@@ -784,6 +850,11 @@ class KMedoids(SKLearnClusterer):
 	| In: 12th International Conference on Similarity Search and Applications (SISAP 2019), 171-187.
 	| https://doi.org/10.1007/978-3-030-32047-8_16
 	| Preprint: https://arxiv.org/abs/1810.05691
+
+	| Lars Lenssen, Erich Schubert:
+	| Medoid silhouette clustering with automatic cluster number selection
+	| Information Systems (120), 2024, 102290
+	| <https://doi.org/10.1016/j.is.2023.102290>
 
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
