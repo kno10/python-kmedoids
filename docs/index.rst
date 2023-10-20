@@ -154,7 +154,7 @@ Implemented Algorithms
 * :ref:`Bestk<bestk>` (Lenssen and Schubert, 2023)
 * :ref:`PAMSIL<pamsil>` (Van der Laan and Pollard, 2003)
 * :ref:`PAMMEDSIL<pammedsil>` (Van der Laan and Pollard, 2003)
-* :ref:`Medoid Silhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
+* :ref:`MedoidSilhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
 
 Note that the k-means style "alternating" algorithm yields rather poor result quality
 (see Schubert and Rousseeuw 2021 for an example and explanation).
