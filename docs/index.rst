@@ -257,6 +257,13 @@ k-Medoids result object
 
 .. autoclass:: KMedoidsResult
 
+.. _BestkResult:
+
+Result of choosing the optimal number of clusters according to the Medoid Silhouette.
+=======================
+
+.. autoclass:: BestkResult
+
 .. _KMedoids:
 
 sklearn-compatible API
