@@ -114,22 +114,6 @@ MNIST (10k samples)
 	print("PAM took: %.2f ms" % ((time.time() - start)*1000))
 	print("Loss with PAM:", pam.loss)
 
-Choose the optimal number of clusters
--------------------
-
-.. code-block:: python
-
-    import kmedoids, numpy
-    from sklearn.datasets import fetch_openml
-    from sklearn.metrics.pairwise import euclidean_distances
-    X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
-    X = X[:10000]
-    diss = euclidean_distances(X)
-    bk = kmedoids.bestk(diss, 100)
-    print("Optimal number of clusters according to the Medoid Silhouette:", bk.bestk)
-    print("Medoid Silhouette over range of k:", bk.losses)
-    print("Range of k:", bk.rangek)
-
 Memory Requirements
 -------------------
 
@@ -151,10 +135,9 @@ Implemented Algorithms
 * :ref:`FasterMSC<fastermsc>` (Lenssen and Schubert, 2022)
 * :ref:`FastMSC<fastmsc>` (Lenssen and Schubert, 2022)
 * :ref:`DynMSC<dynmsc>` (Lenssen and Schubert, 2023)
-* :ref:`Bestk<bestk>` (Lenssen and Schubert, 2023)
 * :ref:`PAMSIL<pamsil>` (Van der Laan and Pollard, 2003)
 * :ref:`PAMMEDSIL<pammedsil>` (Van der Laan and Pollard, 2003)
-* :ref:`MedoidSilhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
+* :ref:`Medoid Silhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
 
 Note that the k-means style "alternating" algorithm yields rather poor result quality
 (see Schubert and Rousseeuw 2021 for an example and explanation).
@@ -215,13 +198,6 @@ DynMSC
 
 .. autofunction:: dynmsc
 
-.. _Bestk:
-
-Bestk
-=========
-
-.. autofunction:: bestk
-
 .. _PAMSIL:
 
 PAMSIL
@@ -256,13 +232,6 @@ k-Medoids result object
 =======================
 
 .. autoclass:: KMedoidsResult
-
-.. _BestkResult:
-
-Result of choosing the optimal number of clusters according to the Medoid Silhouette.
-=======================
-
-.. autoclass:: BestkResult
 
 .. _KMedoids:
 
@@ -305,8 +274,7 @@ For further details on medoid Silhouette clustering with automatic cluster numbe
 
      | Lars Lenssen, Erich Schubert:
      | **Medoid silhouette clustering with automatic cluster number selection**
-     | Information Systems (120), 2024, 102290
-     | https://doi.org/10.1016/j.is.2023.102290
+     | Preprint: <https://arxiv.org/abs/2309.03751>
 
 an earlier version was published as:
 
