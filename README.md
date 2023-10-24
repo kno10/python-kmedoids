@@ -146,10 +146,10 @@ from sklearn.metrics.pairwise import euclidean_distances
 X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
 X = X[:10000]
 diss = euclidean_distances(X)
-bk = kmedoids.bestk(diss, 100)
-print("Optimal number of clusters according to the Medoid Silhouette:", bk.bestk)
-print("Medoid Silhouette over range of k:", bk.losses)
-print("Range of k:", bk.rangek)
+dm = kmedoids.dynmsc(diss, 100)
+print("Optimal number of clusters according to the Medoid Silhouette:", dm.bestk)
+print("Medoid Silhouette over range of k:", dm.losses)
+print("Range of k:", dm.rangek)
 ```
 
 ### Memory Requirements
@@ -170,7 +170,6 @@ For larger data sets, it is recommended to only cluster a representative sample 
 * **FasterMSC** (Lenssen and Schubert, 2022)
 * FastMSC (Lenssen and Schubert, 2022)
 * DynMSC (Lenssen and Schubert, 2023)
-* Bestk (Lenssen and Schubert, 2023)
 * PAMSIL (Van der Laan and Pollard, 2003)
 * PAMMEDSIL (Van der Laan and Pollard, 2003)
 * Medoid Silhouette index for evaluation (Van der Laan and Pollard, 2003)

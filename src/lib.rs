@@ -181,48 +181,22 @@ macro_rules! dynmsc_call {
 /// :param max_iter: maximum number of iterations
 /// :type max_iter: int
 /// :return: k-medoids clustering result
-/// :rtype: KMedoidsResult
-#[pyfunction]
-fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, max_iter: usize) -> PyResult<Py<PyAny>> {
-    assert_eq!(dist.ndim(), 2);
-    assert_eq!(dist.shape()[0], dist.shape()[1]);
-    let mut meds = meds.to_vec()?;
-    let (loss, assi, n_iter, n_swap, best_meds, _losses): ($ltype, _, _, _, _, _) = rustkmedoids::dynmsc(&dist.as_array(), &mut meds, max_iter);
-    Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, best_meds), n_iter, n_swap).to_object(py))
-    })
-}
-}}
-dynmsc_call!(dynmsc_f32, f32, f64);
-dynmsc_call!(dynmsc_f64, f64, f64);
-
-
-macro_rules! bestk_call {
-($name:ident, $type: ty, $ltype: ty) => {
-/// Run $variant k-medoids clustering function for $type precision
-///
-/// :param dist: distance matrix
-/// :type dist: ndarray
-/// :param meds: initial medoids
-/// :type meds: ndarray
-/// :param max_iter: maximum number of iterations
-/// :type max_iter: int
-/// :return: k-medoids clustering result
-/// :rtype: KMedoidsResult
+/// :rtype: DynkResult
 #[pyfunction]
 fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, max_iter: usize) -> PyResult<Py<PyAny>> {
     assert_eq!(dist.ndim(), 2);
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let mut meds = meds.to_vec()?;
     let maxk = meds.len() + 1;
-    let (_loss, _assi, _n_iter, _n_swap, best_meds, losses): ($ltype, _, _, _, _, _) = rustkmedoids::dynmsc(&dist.as_array(), &mut meds, max_iter);
+    let (loss, assi, n_iter, n_swap, best_meds, losses): ($ltype, _, _, _, _, _) = rustkmedoids::dynmsc(&dist.as_array(), &mut meds, max_iter);
+    let bestk = best_meds.len();
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((best_meds.len(), PyArray1::from_vec(py, losses), (2..maxk).collect::<Vec<usize>>()).to_object(py))
+      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, best_meds), bestk, PyArray1::from_vec(py, losses), (2..maxk).collect::<Vec<usize>>(), n_iter, n_swap).to_object(py))
     })
 }
 }}
-bestk_call!(bestk_f32, f32, f64);
-bestk_call!(bestk_f64, f64, f64);
+dynmsc_call!(dynmsc_f32, f32, f64);
+dynmsc_call!(dynmsc_f64, f64, f64);
 
 macro_rules! silhouette_call {
 ($name:ident, $type: ty) => {
@@ -327,8 +301,6 @@ fn kmedoids(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("_fastermsc_f64", wrap_pyfunction!(fastermsc_f64, m)?)?;
     m.add("_dynmsc_f32", wrap_pyfunction!(dynmsc_f32, m)?)?;
     m.add("_dynmsc_f64", wrap_pyfunction!(dynmsc_f64, m)?)?;
-    m.add("_bestk_f32", wrap_pyfunction!(bestk_f32, m)?)?;
-    m.add("_bestk_f64", wrap_pyfunction!(bestk_f64, m)?)?;
     m.add("_pam_swap_f32", wrap_pyfunction!(pam_swap_f32, m)?)?;
     m.add("_pam_swap_f64", wrap_pyfunction!(pam_swap_f64, m)?)?;
     m.add("_pam_swap_i32", wrap_pyfunction!(pam_swap_i32, m)?)?;

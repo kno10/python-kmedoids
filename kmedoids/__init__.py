@@ -111,9 +111,24 @@ class KMedoidsResult:
 		return f"KMedoidsResult(loss={self.loss}, labels={self.labels}, medoids={self.medoids}, n_iter={self.n_iter}, n_swaps={self.n_swap})"
 
 
-class BestkResult:
+class DynkResult:
 	"""
-	Result of choosing the optimal number of clusters according to the Medoid Silhouette.
+	K-medoids clustering result with automatic number of clusters
+
+	:param loss: Loss of this clustering (sum of deviations)
+	:type loss: float
+
+	:param labels: Cluster assignment
+	:type labels: ndarray
+
+	:param medoids: Chosen medoid indexes
+	:type medoids: ndarray
+
+	:param n_iter: Number of iterations
+	:type n_iter: int
+
+	:param n_swap: Number of swaps performed
+	:type n_swap: int
 
 	:param bestk: Best k by Medoid Silhouette
 	:type bestk: int
@@ -124,13 +139,18 @@ class BestkResult:
 	:param rangek: range of k
 	:type rangek: range
 	"""
-	def __init__(self, bestk, losses, rangek):
+	def __init__(self, loss, labels, medoids, bestk, losses, rangek, n_iter=None, n_swap=None):
+		self.loss = loss
+		self.labels = labels
+		self.medoids = medoids
+		self.n_iter = n_iter
+		self.n_swap = n_swap
 		self.bestk = bestk
 		self.losses = losses
 		self.rangek = rangek
 
 	def __repr__(self):
-		return f"BestkResult(bestk={self.bestk}, losses={self.losses}, rangek={self.rangek})"
+		return f"DynkResult(loss={self.loss}, labels={self.labels}, medoids={self.medoids}, bestk={self.bestk}, losses={self.losses}, rangek={self.rangek}, n_iter={self.n_iter}, n_swaps={self.n_swap})"
 
 def _check_medoids(diss, medoids, init, random_state):
 	"""Check the medoids and random_state parameters."""
@@ -609,8 +629,8 @@ def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	:param random_state: random seed if no medoids are given
 	:type random_state: int, RandomState instance or None
 
-	:return: k-medoids clustering result
-	:rtype: KMedoidsResult
+	:return: k-medoids clustering with automatic number of clusters
+	:rtype: DynkResult
 	"""
 	import numpy as np
 	from .kmedoids import _dynmsc_f32, _dynmsc_f64
@@ -623,53 +643,9 @@ def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return KMedoidsResult(*_dynmsc_f32(diss, medoids.astype(np.uint64), max_iter))
+			return DynkResult(*_dynmsc_f32(diss, medoids.astype(np.uint64), max_iter))
 		elif dtype == np.float64:
-			return KMedoidsResult(*_dynmsc_f64(diss, medoids.astype(np.uint64), max_iter))
-	raise ValueError("Input data not supported. Use a numpy array of floats.")
-
-def bestk(diss, medoids=100, max_iter=100, init="random", random_state=None):
-	"""Optimal number of clusters according to the Medoid Silhouette
-
-	This version uses DynMSC to choose the ptimal number of clusters according
-	to the Medoid Silhouette, that performs DynMSC for k = 2 to the number of input medoids
-	and returns k with the highest Average Medoid Silhouette.
-
-	References:
-
-	| Lars Lenssen, Erich Schubert:
-	| Medoid silhouette clustering with automatic cluster number selection
-	| Information Systems (120), 2024, 102290
-	| <https://doi.org/10.1016/j.is.2023.102290>
-
-	:param diss: square numpy array of dissimilarities
-	:type diss: ndarray
-	:param medoids:  maximum number of clusters to find or existing medoids with length of maximum number of clusters to find
-	:type medoids: int or ndarray
-	:param max_iter: maximum number of iterations
-	:type max_iter: int
-	:param init: initialization method
-	:type init: str, "random", "first" or "build"
-	:param random_state: random seed if no medoids are given
-	:type random_state: int, RandomState instance or None
-
-	:return: Result of choosing the optimal number of clusters according to the Medoid Silhouette
-	:rtype: BestkResult
-	"""
-	import numpy as np
-	from .kmedoids import _bestk_f32, _bestk_f64
-
-	if not isinstance(diss, np.ndarray):
-		diss = np.array(diss)
-
-	medoids = _check_medoids(diss, medoids, init, random_state)
-
-	if isinstance(diss, np.ndarray):
-		dtype = diss.dtype
-		if dtype == np.float32:
-			return BestkResult(*_bestk_f32(diss, medoids.astype(np.uint64), max_iter))
-		elif dtype == np.float64:
-			return BestkResult(*_bestk_f64(diss, medoids.astype(np.uint64), max_iter))
+			return DynkResult(*_dynmsc_f64(diss, medoids.astype(np.uint64), max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def alternating(diss, medoids, max_iter=100, init="random", random_state=None):
