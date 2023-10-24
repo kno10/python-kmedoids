@@ -114,6 +114,22 @@ MNIST (10k samples)
 	print("PAM took: %.2f ms" % ((time.time() - start)*1000))
 	print("Loss with PAM:", pam.loss)
 
+Choose the optimal number of clusters
+-------------------
+
+.. code-block:: python
+
+    import kmedoids, numpy
+    from sklearn.datasets import fetch_openml
+    from sklearn.metrics.pairwise import euclidean_distances
+    X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
+    X = X[:10000]
+    diss = euclidean_distances(X)
+    dm = kmedoids.dynmsc(diss, 100)
+    print("Optimal number of clusters according to the Medoid Silhouette:", dm.bestk)
+    print("Medoid Silhouette over range of k:", dm.losses)
+    print("Range of k:", dm.rangek)
+
 Memory Requirements
 -------------------
 
@@ -137,7 +153,7 @@ Implemented Algorithms
 * :ref:`DynMSC<dynmsc>` (Lenssen and Schubert, 2023)
 * :ref:`PAMSIL<pamsil>` (Van der Laan and Pollard, 2003)
 * :ref:`PAMMEDSIL<pammedsil>` (Van der Laan and Pollard, 2003)
-* :ref:`Medoid Silhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
+* :ref:`MedoidSilhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
 
 Note that the k-means style "alternating" algorithm yields rather poor result quality
 (see Schubert and Rousseeuw 2021 for an example and explanation).
@@ -274,7 +290,8 @@ For further details on medoid Silhouette clustering with automatic cluster numbe
 
      | Lars Lenssen, Erich Schubert:
      | **Medoid silhouette clustering with automatic cluster number selection**
-     | Preprint: <https://arxiv.org/abs/2309.03751>
+     | Information Systems (120), 2024, 102290
+     | https://doi.org/10.1016/j.is.2023.102290
 
 an earlier version was published as:
 
