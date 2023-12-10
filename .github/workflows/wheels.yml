@@ -65,8 +65,7 @@ jobs:
         run: |
           rustup target add aarch64-apple-darwin
           python3 -m pip install -r requirements.txt -r requirements-dev.txt
-          maturin build --release --strip
-          maturin build --release --strip --universal2
+          maturin build --release --strip --target universal2-apple-darwin
           python3 -m pip install kmedoids --no-index --find-links target/wheels
           cd tests && python3 -m unittest discover && cd ..
       - uses: actions/upload-artifact@v3
