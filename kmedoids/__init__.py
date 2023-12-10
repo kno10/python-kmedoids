@@ -46,8 +46,8 @@ References:
 | Lars Lenssen, Erich Schubert:
 | Medoid silhouette clustering with automatic cluster number selection
 | Information Systems (120), 2024, 102290
-| <https://doi.org/10.1016/j.is.2023.102290>
-| Preprint: <https://arxiv.org/abs/2309.03751>
+| https://doi.org/10.1016/j.is.2023.102290
+| Preprint: https://arxiv.org/abs/2309.03751
 
 | Lars Lenssen, Erich Schubert:
 | Clustering by Direct Optimization of the Medoid Silhouette
@@ -525,8 +525,8 @@ def fastmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	| Lars Lenssen, Erich Schubert:
 	| Medoid silhouette clustering with automatic cluster number selection
 	| Information Systems (120), 2024, 102290
-	| <https://doi.org/10.1016/j.is.2023.102290>
-	| Preprint: <https://arxiv.org/abs/2309.03751>
+	| https://doi.org/10.1016/j.is.2023.102290
+	| Preprint: https://arxiv.org/abs/2309.03751
 
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
@@ -575,8 +575,8 @@ def fastermsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	| Lars Lenssen, Erich Schubert:
 	| Medoid silhouette clustering with automatic cluster number selection
 	| Information Systems (120), 2024, 102290
-	| <https://doi.org/10.1016/j.is.2023.102290>
-	| Preprint: <https://arxiv.org/abs/2309.03751>
+	| https://doi.org/10.1016/j.is.2023.102290
+	| Preprint: https://arxiv.org/abs/2309.03751
 
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
@@ -625,8 +625,8 @@ def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	| Lars Lenssen, Erich Schubert:
 	| Medoid silhouette clustering with automatic cluster number selection
 	| Information Systems (120), 2024, 102290
-	| <https://doi.org/10.1016/j.is.2023.102290>
-	| Preprint: <https://arxiv.org/abs/2309.03751>
+	| https://doi.org/10.1016/j.is.2023.102290
+	| Preprint: https://arxiv.org/abs/2309.03751
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
@@ -840,8 +840,8 @@ class KMedoids(SKLearnClusterer):
 	| Lars Lenssen, Erich Schubert:
 	| Medoid silhouette clustering with automatic cluster number selection
 	| Information Systems (120), 2024, 102290
-	| <https://doi.org/10.1016/j.is.2023.102290>
-	| Preprint: <https://arxiv.org/abs/2309.03751>
+	| https://doi.org/10.1016/j.is.2023.102290
+	| Preprint: https://arxiv.org/abs/2309.03751
 
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
