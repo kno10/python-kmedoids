@@ -38,9 +38,10 @@ For further details on medoid Silhouette clustering with automatic cluster numbe
 > Lars Lenssen, Erich Schubert:  
 > **Medoid silhouette clustering with automatic cluster number selection**  
 > Information Systems (120), 2024, 102290  
-> <https://doi.org/10.1016/j.is.2023.102290>
+> <https://doi.org/10.1016/j.is.2023.102290>  
+> Preprint: <https://arxiv.org/abs/2309.03751>
 
-an earlier version was published as:
+the basic FasterMSC method was first published as:
 
 > Lars Lenssen, Erich Schubert:  
 > **Clustering by Direct Optimization of the Medoid Silhouette**  
@@ -139,6 +140,12 @@ print("Loss with PAM:", pam.loss)
 
 ### Choose the optimal number of clusters
 
+This package includes DynMSC, an algorithm that optimizes the Medoid Silhouette,
+and chooses the "optimal" number of clusters in a range of 2..kmax.
+Beware that if you allow a too large kmax, the optimum result will likely have many
+one-elemental clusters. A too high kmax may mask more desirable results, hence it
+is recommended that you choose only 2-3 times the number of clusters you expect as maximum.
+
 ```python
 import kmedoids, numpy
 from sklearn.datasets import fetch_openml
@@ -169,7 +176,7 @@ For larger data sets, it is recommended to only cluster a representative sample 
 * Silhouette index for evaluation (Rousseeuw, 1987)
 * **FasterMSC** (Lenssen and Schubert, 2022)
 * FastMSC (Lenssen and Schubert, 2022)
-* DynMSC (Lenssen and Schubert, 2023)
+* **DynMSC** (Lenssen and Schubert, 2023)
 * PAMSIL (Van der Laan and Pollard, 2003)
 * PAMMEDSIL (Van der Laan and Pollard, 2003)
 * Medoid Silhouette index for evaluation (Van der Laan and Pollard, 2003)

@@ -8,7 +8,6 @@ in decreasing order of performance:
 - PAM (the original Partitioning Around Medoids algorithm)
 - Alternating (k-means style algorithm, yields results of lower quality)
 - BUILD (the initialization of PAM)
-- Silhouette evaluation
 
 Additionally, the package implements clustering algorithms
 for direct optimization of the (Medoid) Silhouette,
@@ -16,9 +15,14 @@ in decreasing order of performance:
 
 - FasterMSC
 - FastMSC (same result as PAMMEDSIL; but faster)
-- DynMSC
+- DynMSC (automatic choice of k; faster than repeated FasterMSC)
 - PAMMEDSIL
 - PAMSIL
+
+Evaluation measures:
+
+- Silhouette evaluation
+- Medoid Silhouette evaluation
 
 References:
 
@@ -43,6 +47,7 @@ References:
 | Medoid silhouette clustering with automatic cluster number selection
 | Information Systems (120), 2024, 102290
 | <https://doi.org/10.1016/j.is.2023.102290>
+| Preprint: <https://arxiv.org/abs/2309.03751>
 
 | Lars Lenssen, Erich Schubert:
 | Clustering by Direct Optimization of the Medoid Silhouette
@@ -78,7 +83,9 @@ __all__ = [
 	"alternating",
 	"pam_build",
 	"silhouette",
-	"KMedoidsResult"
+	"medoid_silhouette",
+	"KMedoidsResult",
+	"DynkResult",
 ]
 
 class KMedoidsResult:
@@ -113,7 +120,7 @@ class KMedoidsResult:
 
 class DynkResult:
 	"""
-	K-medoids clustering result with automatic number of clusters
+	K-medoids or Silhouette clustering result with automatic number of clusters
 
 	:param loss: Loss of this clustering (sum of deviations)
 	:type loss: float
@@ -519,6 +526,7 @@ def fastmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	| Medoid silhouette clustering with automatic cluster number selection
 	| Information Systems (120), 2024, 102290
 	| <https://doi.org/10.1016/j.is.2023.102290>
+	| Preprint: <https://arxiv.org/abs/2309.03751>
 
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
@@ -568,6 +576,7 @@ def fastermsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	| Medoid silhouette clustering with automatic cluster number selection
 	| Information Systems (120), 2024, 102290
 	| <https://doi.org/10.1016/j.is.2023.102290>
+	| Preprint: <https://arxiv.org/abs/2309.03751>
 
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
@@ -617,10 +626,11 @@ def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	| Medoid silhouette clustering with automatic cluster number selection
 	| Information Systems (120), 2024, 102290
 	| <https://doi.org/10.1016/j.is.2023.102290>
+	| Preprint: <https://arxiv.org/abs/2309.03751>
 
 	:param diss: square numpy array of dissimilarities
 	:type diss: ndarray
-	:param medoids:  maximum number of clusters to find or existing medoids with length of maximum number of clusters to find
+	:param medoids: maximum number of clusters to find or existing medoids with length of maximum number of clusters to find
 	:type medoids: int or ndarray
 	:param max_iter: maximum number of iterations
 	:type max_iter: int
@@ -831,6 +841,7 @@ class KMedoids(SKLearnClusterer):
 	| Medoid silhouette clustering with automatic cluster number selection
 	| Information Systems (120), 2024, 102290
 	| <https://doi.org/10.1016/j.is.2023.102290>
+	| Preprint: <https://arxiv.org/abs/2309.03751>
 
 	| Lars Lenssen, Erich Schubert:
 	| Clustering by Direct Optimization of the Medoid Silhouette
@@ -850,7 +861,7 @@ class KMedoids(SKLearnClusterer):
 	| In: Journal of Statistical Computation and Simulation, pp 575-584, 2003
 	| https://doi.org/10.1080/0094965031000136012
 
-	:param n_clusters: The number of clusters to form
+	:param n_clusters: The number of clusters to form (maximum number of clusters if `method="dynmsc"`)
 	:type n_clusters: int
 	:param metric: It is recommended to use 'precomputed', in particular when experimenting with different `n_clusters`.
 	    If you have sklearn installed, you may pass any metric supported by `sklearn.metrics.pairwise_distances`.

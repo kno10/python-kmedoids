@@ -81,7 +81,7 @@ Example
    print("Loss is:", c.loss)
 
 Using the sklearn-compatible API
--------------------
+--------------------------------
 
 Note that KMedoids defaults to the `"precomputed"` metric, expecting a pairwise distance matrix.
 If you have sklearn installed, you can use `metric="euclidean"`.
@@ -114,8 +114,14 @@ MNIST (10k samples)
 	print("PAM took: %.2f ms" % ((time.time() - start)*1000))
 	print("Loss with PAM:", pam.loss)
 
-Choose the optimal number of clusters
--------------------
+Choosing the optimal number of clusters
+---------------------------------------
+
+This package includes :ref:`DynMSC<dynmsc>`, an algorithm that optimizes the Medoid Silhouette,
+and chooses the "optimal" number of clusters in a range of 2..kmax.
+Beware that if you allow a too large kmax, the optimum result will likely have many
+one-elemental clusters. A too high kmax may mask more desirable results, hence it
+is recommended that you choose only 2-3 times the number of clusters you expect as maximum.
 
 .. code-block:: python
 
@@ -142,18 +148,26 @@ For larger data sets, it is recommended to only cluster a representative sample 
 Implemented Algorithms
 ======================
 
+K-Medoids Clustering:
+
 * :ref:`FasterPAM<fasterpam>` (Schubert and Rousseeuw, 2020, 2021)
 * :ref:`FastPAM1<fastpam1>` (Schubert and Rousseeuw, 2019, 2021)
 * :ref:`PAM<pam>` (Kaufman and Rousseeuw, 1987) with BUILD and SWAP
-* :ref:`Alternating<alternating>` (k-means-style approach)
 * :ref:`BUILD<build>` (Kaufman and Rousseeuw, 1987)
-* :ref:`Silhouette<silhouette>` (Kaufman and Rousseeuw, 1987)
+* :ref:`Alternating<alternating>` (k-means-style approach)
+
+Silhouette Clustering:
+
+* :ref:`DynMSC<dynmsc>` (Lenssen and Schubert, 2023)
 * :ref:`FasterMSC<fastermsc>` (Lenssen and Schubert, 2022)
 * :ref:`FastMSC<fastmsc>` (Lenssen and Schubert, 2022)
-* :ref:`DynMSC<dynmsc>` (Lenssen and Schubert, 2023)
-* :ref:`PAMSIL<pamsil>` (Van der Laan and Pollard, 2003)
 * :ref:`PAMMEDSIL<pammedsil>` (Van der Laan and Pollard, 2003)
-* :ref:`MedoidSilhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
+* :ref:`PAMSIL<pamsil>` (Van der Laan and Pollard, 2003)
+
+Evaluation:
+
+* :ref:`Medoid Silhouette<medoid_silhouette>` (Van der Laan and Pollard, 2003)
+* :ref:`Silhouette<silhouette>` (Kaufman and Rousseeuw, 1987)
 
 Note that the k-means style "alternating" algorithm yields rather poor result quality
 (see Schubert and Rousseeuw 2021 for an example and explanation).
@@ -193,6 +207,13 @@ PAM BUILD
 
 .. autofunction:: pam_build
 
+.. _DynMSC:
+
+DynMSC
+======
+
+.. autofunction:: dynmsc
+
 .. _FasterMSC:
 
 FasterMSC
@@ -207,12 +228,12 @@ FastMSC
 
 .. autofunction:: fastmsc
 
-.. _DynMSC:
+.. _PAMMEDSIL:
 
-DynMSC
+PAMMEDSIL
 =========
 
-.. autofunction:: dynmsc
+.. autofunction:: pammedsil
 
 .. _PAMSIL:
 
@@ -220,13 +241,6 @@ PAMSIL
 =========
 
 .. autofunction:: pamsil
-
-.. _PAMMEDSIL:
-
-PAMMEDSIL
-=========
-
-.. autofunction:: pammedsil
 
 .. _Silhouette:
 
@@ -288,10 +302,11 @@ an earlier (slower, and now obsolete) version was published as:
 
 For further details on medoid Silhouette clustering with automatic cluster number selection (FasterMSC, DynMSC), see:
 
-     | Lars Lenssen, Erich Schubert:
-     | **Medoid silhouette clustering with automatic cluster number selection**
-     | Information Systems (120), 2024, 102290
-     | https://doi.org/10.1016/j.is.2023.102290
+     | Lars Lenssen, Erich Schubert:  
+     | **Medoid silhouette clustering with automatic cluster number selection**  
+     | Information Systems (120), 2024, 102290  
+     | https://doi.org/10.1016/j.is.2023.102290  
+     | Preprint: https://arxiv.org/abs/2309.03751
 
 an earlier version was published as:
 

@@ -3,15 +3,15 @@ message: "If you use this software, please cite it as below."
 authors:
   - family-names: Schubert
     given-names: Erich
-    orcid: 0000-0001-9143-4880
+    orcid: "https://orcid.org/0000-0001-9143-4880"
   - family-names: Lenssen
     given-names: Lars
-    orcid: 0000-0003-0037-0418
+    orcid: "https://orcid.org/0000-0003-0037-0418"
 title: "Fast k-medoids Clustering in Rust and Python"
 journal: "J. Open Source Softw."
 doi: 10.21105/joss.04183
-version: 0.4.3
-date-released: 2023-04-20
+version: 0.5.0
+date-released: 2023-12-10
 license: GPL-3.0
 preferred-citation:
   title: "Fast k-medoids Clustering in Rust and Python"
@@ -40,6 +40,8 @@ references:
   year: "2021"
   type: article
   journal: "Inf. Syst."
+  volume: 101
+  start: 101804
   authors:
     - family-names: Schubert
       given-names: Erich
@@ -50,6 +52,18 @@ references:
   year: "2022"
   type: conference-paper
   conference: "Similarity Search and Applications - 15th International Conference, SISAP 2022, Bologna, Italy, October 5-7, 2022, Proceedings"
+  authors:
+    - family-names: Lenssen
+      given-names: Lars
+    - family-names: Schubert
+      given-names: Erich
+- title: "Medoid silhouette clustering with automatic cluster number selection"
+  doi: "10.1016/j.is.2023.102290"
+  year: "2024"
+  type: article
+  journal: "Inf. Syst."
+  volume: 120
+  start: 102290
   authors:
     - family-names: Lenssen
       given-names: Lars

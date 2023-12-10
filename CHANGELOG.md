@@ -2,6 +2,11 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.5.0 (2023-12-10)
+
+- add DynMSC, Silhouette clustering with optimal number of clusters
+- update dependency versions
+
 ## kmedoids 0.4.3 (2023-04-20)
 
 - fix silhouette evaluation for k > 2 (in Rust)

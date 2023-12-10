@@ -1,10 +1,10 @@
 [build-system]
-requires = ["maturin>=0.14,<0.15"]
+requires = ["maturin>=1.4,<2"]
 build-backend = "maturin"
 
 [project]
 name = "kmedoids"
-version = "0.4.3"
+version = "0.5.0"
 description = "k-Medoids Clustering in Python with FasterPAM"
 requires-dist = ["numpy"]
 classifier = [
