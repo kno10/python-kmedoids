@@ -183,15 +183,15 @@ macro_rules! dynmsc_call {
 /// :return: k-medoids clustering result
 /// :rtype: DynkResult
 #[pyfunction]
-fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, max_iter: usize) -> PyResult<Py<PyAny>> {
+fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, minimum_k: usize, max_iter: usize) -> PyResult<Py<PyAny>> {
     assert_eq!(dist.ndim(), 2);
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let mut meds = meds.to_vec()?;
     let maxk = meds.len() + 1;
-    let (loss, assi, n_iter, n_swap, best_meds, losses): ($ltype, _, _, _, _, _) = rustkmedoids::dynmsc(&dist.as_array(), &mut meds, max_iter);
+    let (loss, assi, n_iter, n_swap, best_meds, losses): ($ltype, _, _, _, _, _) = rustkmedoids::dynmsc(&dist.as_array(), &mut meds, minimum_k, max_iter);
     let bestk = best_meds.len();
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, best_meds), bestk, PyArray1::from_vec(py, losses), (2..maxk).collect::<Vec<usize>>(), n_iter, n_swap).to_object(py))
+      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, best_meds), bestk, PyArray1::from_vec(py, losses), (minimum_k..maxk).collect::<Vec<usize>>(), n_iter, n_swap).to_object(py))
     })
 }
 }}

@@ -613,11 +613,11 @@ def fastermsc(diss, medoids, max_iter=100, init="random", random_state=None):
 			return KMedoidsResult(*_fastermsc_f64(diss, medoids.astype(np.uint64), max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
-def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
+def dynmsc(diss, medoids, minimum_k=2, max_iter=100, init="random", random_state=None):
 	"""DynMSC clustering
 
 	This is a version of FasterMSC with automatic cluster number selection, that
-	performs FasterMSC for k = 2 to the number of input medoids and returns
+	performs FasterMSC for a minimum k to the number of input medoids and returns
 	the clustering with the highest Average Medoid Silhouette.
 
 	References:
@@ -636,6 +636,8 @@ def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	:type max_iter: int
 	:param init: initialization method
 	:type init: str, "random", "first" or "build"
+	:param minimum_k: minimum number of clusters to find
+	:type minimum_k: int
 	:param random_state: random seed if no medoids are given
 	:type random_state: int, RandomState instance or None
 
@@ -650,12 +652,14 @@ def dynmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 
 	medoids = _check_medoids(diss, medoids, init, random_state)
 
+	if medoids.shape[0] < minimum_k:
+		raise ValueError("Maximum k should be at least minimum k.")
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return DynkResult(*_dynmsc_f32(diss, medoids.astype(np.uint64), max_iter))
+			return DynkResult(*_dynmsc_f32(diss, medoids.astype(np.uint64), minimum_k, max_iter))
 		elif dtype == np.float64:
-			return DynkResult(*_dynmsc_f64(diss, medoids.astype(np.uint64), max_iter))
+			return DynkResult(*_dynmsc_f64(diss, medoids.astype(np.uint64), minimum_k, max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def alternating(diss, medoids, max_iter=100, init="random", random_state=None):
@@ -933,7 +937,7 @@ class KMedoids(SKLearnClusterer):
 		elif self.method == "fastermsc":
 			result = fastermsc(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "dynmsc":
-			result = dynmsc(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
+			result = dynmsc(X, self.n_clusters, 2, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "fastmsc":
 			result = fastmsc(X, self.n_clusters, self.max_iter, self.init, random_state=self.random_state)
 		elif self.method == "pamsil":

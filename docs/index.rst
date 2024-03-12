@@ -118,7 +118,7 @@ Choosing the optimal number of clusters
 ---------------------------------------
 
 This package includes :ref:`DynMSC<dynmsc>`, an algorithm that optimizes the Medoid Silhouette,
-and chooses the "optimal" number of clusters in a range of 2..kmax.
+and chooses the "optimal" number of clusters in a range of kmin..kmax.
 Beware that if you allow a too large kmax, the optimum result will likely have many
 one-elemental clusters. A too high kmax may mask more desirable results, hence it
 is recommended that you choose only 2-3 times the number of clusters you expect as maximum.
@@ -131,7 +131,9 @@ is recommended that you choose only 2-3 times the number of clusters you expect 
     X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
     X = X[:10000]
     diss = euclidean_distances(X)
-    dm = kmedoids.dynmsc(diss, 100)
+    kmin = 10
+    kmax = 20
+    dm = kmedoids.dynmsc(diss, kmax, kmin)
     print("Optimal number of clusters according to the Medoid Silhouette:", dm.bestk)
     print("Medoid Silhouette over range of k:", dm.losses)
     print("Range of k:", dm.rangek)
