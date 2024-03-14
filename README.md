@@ -153,13 +153,14 @@ from sklearn.metrics.pairwise import euclidean_distances
 X, _ = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
 X = X[:10000]
 diss = euclidean_distances(X)
-kmin = 10
-kmax = 20
+kmin, kmax = 10, 20
 dm = kmedoids.dynmsc(diss, kmax, kmin)
 print("Optimal number of clusters according to the Medoid Silhouette:", dm.bestk)
 print("Medoid Silhouette over range of k:", dm.losses)
 print("Range of k:", dm.rangek)
 ```
+
+[Full Colab notebook example](https://colab.research.google.com/drive/14vop12NwZ5Si5EuzXHIksKnxZxabecWW).
 
 ### Memory Requirements
 

@@ -78,7 +78,7 @@ class Test_kmedoids(unittest.TestCase):
     def test_dynmsc(self):
         dist = np.array([[0, 2, 3, 4, 5], [2, 0, 6, 7, 8], [3, 6, 0, 9, 10], [4, 7, 9, 0, 11], [5, 8, 10, 11, 0]], dtype=np.float32)
         dmsc = kmedoids.dynmsc(dist, 3, init='build')
-        dmsc_rust = kmedoids.kmedoids._dynmsc_f32(dist, dmsc.medoids, 100)
+        dmsc_rust = kmedoids.kmedoids._dynmsc_f32(dist, dmsc.medoids, 2, 100)
         assert dmsc.loss == 0.8761904761904762
         assert np.array_equal(dmsc.medoids, dmsc_rust[2])
         assert dmsc.loss == dmsc_rust[0]

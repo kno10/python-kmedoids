@@ -166,7 +166,7 @@ def _check_medoids(diss, medoids, init, random_state):
 	if isinstance(medoids, np.ndarray):
 		if random_state is not None:
 			warnings.warn("Seed will be ignored if initial medoids are given")
-		return medoids
+		return medoids.astype(np.uintp)
 	if isinstance(medoids, int):
 		if init.lower() == "build":
 			return pam_build(diss, medoids).medoids
@@ -177,8 +177,8 @@ def _check_medoids(diss, medoids, init, random_state):
 		elif isinstance(random_state, numbers.Integral):
 			random_state = np.random.RandomState(random_state)
 		if not isinstance(random_state, np.random.RandomState):
-			raise ValueError("Pass a numpy random generator, state or integer seed")
-		return random_state.choice(diss.shape[0], medoids, False)
+			raise ValueError("Pass a numpy random generator, RandomState or integer seed")
+		return random_state.choice(diss.shape[0], medoids, False).astype(np.uintp)
 	raise ValueError("Specify the number of medoids, or give a numpy array of initial medoids")
 
 def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_cpu=-1):
@@ -245,22 +245,22 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_c
 			else:
 				raise ValueError("Pass a numpy random generator, state or integer seed")
 			if dtype == np.float32:
-				return KMedoidsResult(*_par_fasterpam_f32(diss, medoids.astype(np.uint64), max_iter, seed, n_cpu))
+				return KMedoidsResult(*_par_fasterpam_f32(diss, medoids, max_iter, seed, n_cpu))
 			elif dtype == np.float64:
-				return KMedoidsResult(*_par_fasterpam_f64(diss, medoids.astype(np.uint64), max_iter, seed, n_cpu))
+				return KMedoidsResult(*_par_fasterpam_f64(diss, medoids, max_iter, seed, n_cpu))
 			elif dtype == np.int32:
-				return KMedoidsResult(*_par_fasterpam_i32(diss, medoids.astype(np.uint64), max_iter, seed, n_cpu))
+				return KMedoidsResult(*_par_fasterpam_i32(diss, medoids, max_iter, seed, n_cpu))
 			elif dtype == np.int64:
-				return KMedoidsResult(*_par_fasterpam_i64(diss, medoids.astype(np.uint64), max_iter, seed, n_cpu))
+				return KMedoidsResult(*_par_fasterpam_i64(diss, medoids, max_iter, seed, n_cpu))
 		elif random_state is None:
 			if dtype == np.float32:
-				return KMedoidsResult(*_fasterpam_f32(diss, medoids.astype(np.uint64), max_iter))
+				return KMedoidsResult(*_fasterpam_f32(diss, medoids, max_iter))
 			elif dtype == np.float64:
-				return KMedoidsResult(*_fasterpam_f64(diss, medoids.astype(np.uint64), max_iter))
+				return KMedoidsResult(*_fasterpam_f64(diss, medoids, max_iter))
 			elif dtype == np.int32:
-				return KMedoidsResult(*_fasterpam_i32(diss, medoids.astype(np.uint64), max_iter))
+				return KMedoidsResult(*_fasterpam_i32(diss, medoids, max_iter))
 			elif dtype == np.int64:
-				return KMedoidsResult(*_fasterpam_i64(diss, medoids.astype(np.uint64), max_iter))
+				return KMedoidsResult(*_fasterpam_i64(diss, medoids, max_iter))
 		else:
 			seed = None
 			if random_state is np.random:
@@ -272,13 +272,13 @@ def fasterpam(diss, medoids, max_iter=100, init="random", random_state=None, n_c
 			else:
 				raise ValueError("Pass a numpy random generator, state or integer seed")
 			if dtype == np.float32:
-				return KMedoidsResult(*_rand_fasterpam_f32(diss, medoids.astype(np.uint64), max_iter, seed))
+				return KMedoidsResult(*_rand_fasterpam_f32(diss, medoids, max_iter, seed))
 			elif dtype == np.float64:
-				return KMedoidsResult(*_rand_fasterpam_f64(diss, medoids.astype(np.uint64), max_iter, seed))
+				return KMedoidsResult(*_rand_fasterpam_f64(diss, medoids, max_iter, seed))
 			elif dtype == np.int32:
-				return KMedoidsResult(*_rand_fasterpam_i32(diss, medoids.astype(np.uint64), max_iter, seed))
+				return KMedoidsResult(*_rand_fasterpam_i32(diss, medoids, max_iter, seed))
 			elif dtype == np.int64:
-				return KMedoidsResult(*_rand_fasterpam_i64(diss, medoids.astype(np.uint64), max_iter, seed))
+				return KMedoidsResult(*_rand_fasterpam_i64(diss, medoids, max_iter, seed))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def fastpam1(diss, medoids, max_iter=100, init="random", random_state=None):
@@ -327,13 +327,13 @@ def fastpam1(diss, medoids, max_iter=100, init="random", random_state=None):
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return KMedoidsResult(*_fastpam1_f32(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_fastpam1_f32(diss, medoids, max_iter))
 		elif dtype == np.float64:
-			return KMedoidsResult(*_fastpam1_f64(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_fastpam1_f64(diss, medoids, max_iter))
 		elif dtype == np.int32:
-			return KMedoidsResult(*_fastpam1_i32(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_fastpam1_i32(diss, medoids, max_iter))
 		elif dtype == np.int64:
-			return KMedoidsResult(*_fastpam1_i64(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_fastpam1_i64(diss, medoids, max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def pam_build(diss, k):
@@ -419,13 +419,13 @@ def pam(diss, medoids, max_iter=100, init="build", random_state=None):
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return KMedoidsResult(*_pam_swap_f32(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_pam_swap_f32(diss, medoids, max_iter))
 		elif dtype == np.float64:
-			return KMedoidsResult(*_pam_swap_f64(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_pam_swap_f64(diss, medoids, max_iter))
 		elif dtype == np.int32:
-			return KMedoidsResult(*_pam_swap_i32(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_pam_swap_i32(diss, medoids, max_iter))
 		elif dtype == np.int64:
-			return KMedoidsResult(*_pam_swap_i64(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_pam_swap_i64(diss, medoids, max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def pammedsil(diss, medoids, max_iter=100, init="build", random_state=None):
@@ -466,9 +466,9 @@ def pammedsil(diss, medoids, max_iter=100, init="build", random_state=None):
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return KMedoidsResult(*_pammedsil_swap_f32(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_pammedsil_swap_f32(diss, medoids, max_iter))
 		elif dtype == np.float64:
-			return KMedoidsResult(*_pammedsil_swap_f64(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_pammedsil_swap_f64(diss, medoids, max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def pamsil(diss, medoids, max_iter=100, init="build", random_state=None):
@@ -508,9 +508,9 @@ def pamsil(diss, medoids, max_iter=100, init="build", random_state=None):
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return KMedoidsResult(*_pamsil_swap_f32(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_pamsil_swap_f32(diss, medoids, max_iter))
 		elif dtype == np.float64:
-			return KMedoidsResult(*_pamsil_swap_f64(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_pamsil_swap_f64(diss, medoids, max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def fastmsc(diss, medoids, max_iter=100, init="random", random_state=None):
@@ -558,9 +558,9 @@ def fastmsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return KMedoidsResult(*_fastmsc_f32(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_fastmsc_f32(diss, medoids, max_iter))
 		elif dtype == np.float64:
-			return KMedoidsResult(*_fastmsc_f64(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_fastmsc_f64(diss, medoids, max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def fastermsc(diss, medoids, max_iter=100, init="random", random_state=None):
@@ -608,9 +608,9 @@ def fastermsc(diss, medoids, max_iter=100, init="random", random_state=None):
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return KMedoidsResult(*_fastermsc_f32(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_fastermsc_f32(diss, medoids, max_iter))
 		elif dtype == np.float64:
-			return KMedoidsResult(*_fastermsc_f64(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_fastermsc_f64(diss, medoids, max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def dynmsc(diss, medoids, minimum_k=2, max_iter=100, init="random", random_state=None):
@@ -632,12 +632,12 @@ def dynmsc(diss, medoids, minimum_k=2, max_iter=100, init="random", random_state
 	:type diss: ndarray
 	:param medoids: maximum number of clusters to find or existing medoids with length of maximum number of clusters to find
 	:type medoids: int or ndarray
+	:param minimum_k: minimum number of clusters to find
+	:type minimum_k: int
 	:param max_iter: maximum number of iterations
 	:type max_iter: int
 	:param init: initialization method
 	:type init: str, "random", "first" or "build"
-	:param minimum_k: minimum number of clusters to find
-	:type minimum_k: int
 	:param random_state: random seed if no medoids are given
 	:type random_state: int, RandomState instance or None
 
@@ -657,9 +657,9 @@ def dynmsc(diss, medoids, minimum_k=2, max_iter=100, init="random", random_state
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return DynkResult(*_dynmsc_f32(diss, medoids.astype(np.uint64), minimum_k, max_iter))
+			return DynkResult(*_dynmsc_f32(diss, medoids, minimum_k, max_iter))
 		elif dtype == np.float64:
-			return DynkResult(*_dynmsc_f64(diss, medoids.astype(np.uint64), minimum_k, max_iter))
+			return DynkResult(*_dynmsc_f64(diss, medoids, minimum_k, max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def alternating(diss, medoids, max_iter=100, init="random", random_state=None):
@@ -692,13 +692,13 @@ def alternating(diss, medoids, max_iter=100, init="random", random_state=None):
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return KMedoidsResult(*_alternating_f32(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_alternating_f32(diss, medoids, max_iter))
 		elif dtype == np.float64:
-			return KMedoidsResult(*_alternating_f64(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_alternating_f64(diss, medoids, max_iter))
 		elif dtype == np.int32:
-			return KMedoidsResult(*_alternating_i32(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_alternating_i32(diss, medoids, max_iter))
 		elif dtype == np.int64:
-			return KMedoidsResult(*_alternating_i64(diss, medoids.astype(np.uint64), max_iter))
+			return KMedoidsResult(*_alternating_i64(diss, medoids, max_iter))
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
 
 def silhouette(diss, labels, samples=False, n_cpu=-1):
@@ -735,7 +735,7 @@ def silhouette(diss, labels, samples=False, n_cpu=-1):
 
 	if not isinstance(diss, np.ndarray):
 		diss = np.array(diss)
-	labels = np.unique(labels, return_inverse=True)[1].astype(np.uint64) # ensure labels are 0..k-1
+	labels = np.unique(labels, return_inverse=True)[1].astype(np.uintp) # ensure labels are 0..k-1
 
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
@@ -797,16 +797,17 @@ def medoid_silhouette(diss, meds, samples=False):
 	if not isinstance(diss, np.ndarray):
 		diss = np.array(diss)
 	if not isinstance(meds, np.ndarray):
-		meds = np.array(meds, dtype=np.uint64)
+		meds = np.array(meds)
+	meds = meds.astype(np.uintp)
 
 	if isinstance(diss, np.ndarray):
 		dtype = diss.dtype
 		if dtype == np.float32:
-			return _medoid_silhouette_f32(diss, meds.astype(np.uint64), samples)
+			return _medoid_silhouette_f32(diss, meds, samples)
 		elif dtype == np.float64:
-			return _medoid_silhouette_f64(diss, meds.astype(np.uint64), samples)
+			return _medoid_silhouette_f64(diss, meds, samples)
 		elif dtype == np.int32:
-			return _medoid_silhouette_i32(diss, meds.astype(np.uint64), samples)
+			return _medoid_silhouette_i32(diss, meds, samples)
 		elif dtype == np.int64:
 			raise ValueError("Input of int64 is currently not supported, as it could overflow the float64 used internally when computing Silhouette. Use diss.astype(numpy.float64) if that is acceptable and you have the necessary memory for this copy.")
 	raise ValueError("Input data not supported. Use a numpy array of floats.")
@@ -881,14 +882,14 @@ class KMedoids(SKLearnClusterer):
 	:param random_state: random seed if no medoids are given
 	:type random_state: int, RandomState instance or None
 
-	:ivar cluster_centers\_: None for 'precomputed'
-	:type cluster_centers\_: array
-	:ivar medoid_indices\_: The indices of the medoid rows in X
-	:type medoid_indices\_: array, shape = (n_clusters,)
-	:ivar labels\_: Labels of each point
-	:type labels\_: array, shape = (n_samples,)
-	:ivar inertia\_: Sum of distances of samples to their closest cluster center
-	:type inertia\_: float
+	:ivar cluster_centers_: None for 'precomputed'
+	:type cluster_centers_: array
+	:ivar medoid_indices_: The indices of the medoid rows in X
+	:type medoid_indices_: array, shape = (n_clusters,)
+	:ivar labels_: Labels of each point
+	:type labels_: array, shape = (n_samples,)
+	:ivar inertia_: Sum of distances of samples to their closest cluster center
+	:type inertia_: float
 	"""
 	def __init__(
 		self,
