@@ -8,12 +8,11 @@ on:
 
 jobs:
   linux-x86-wheels:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         container:
           - "quay.io/pypa/musllinux_1_2_x86_64"
-          - "quay.io/pypa/manylinux2014_x86_64"
           - "quay.io/pypa/manylinux_2_28_x86_64"
     container: ${{ matrix.container }}
     steps:
@@ -28,12 +27,11 @@ jobs:
           if-no-files-found: error
 
   linux-aarch-wheels:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-lates
     strategy:
       matrix:
         container:
           - "quay.io/pypa/musllinux_1_2_aarch64"
-          - "quay.io/pypa/manylinux2014_aarch64"
           - "quay.io/pypa/manylinux_2_28_aarch64"
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +51,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
@@ -81,7 +79,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1

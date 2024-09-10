@@ -12,6 +12,7 @@ echo "git-fetch-with-cli = true" >> "$HOME/.cargo/config.toml"
 
 # build wheels
 for PYBIN in /opt/python/cp3[891]*/bin; do
+    export PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 # for python 3.13
     "${PYBIN}/pip" install -r requirements.txt -r requirements-dev.txt
     "${PYBIN}/maturin" build -i "${PYBIN}/python" --release --strip
 done
