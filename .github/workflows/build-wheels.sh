@@ -11,8 +11,7 @@ echo "[net]" >> "$HOME/.cargo/config.toml"
 echo "git-fetch-with-cli = true" >> "$HOME/.cargo/config.toml"
 
 # build wheels
-for PYBIN in /opt/python/cp3[891]*/bin; do
-    export PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 # for python 3.13
+for PYBIN in /opt/python/cp3[89]*/bin /opt/python/cp31[012]*/bin; do
     "${PYBIN}/pip" install -r requirements.txt -r requirements-dev.txt
     "${PYBIN}/maturin" build -i "${PYBIN}/python" --release --strip
 done
@@ -23,7 +22,7 @@ for wheel in target/wheels/*.whl; do
 done
 
 # test wheels
-for PYBIN in /opt/python/cp3[891]*/bin; do
+for PYBIN in /opt/python/cp3[89]*/bin /opt/python/cp31[012]*/bin; do
     "${PYBIN}/pip" install kmedoids --no-index --find-links wheelhouse
     cd tests && "${PYBIN}/python" -m unittest discover && cd ..
 done
