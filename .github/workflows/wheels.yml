@@ -20,7 +20,7 @@ jobs:
       - name: Build wheels
         run: |
           bash .github/workflows/build-wheels.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v3
         with:
           name: wheels
           path: wheelhouse
@@ -41,7 +41,7 @@ jobs:
       - name: Build wheels
         run: |
           docker run --platform linux/arm64 --workdir /src -v ${PWD}:/src ${{ matrix.container }} /bin/bash .github/workflows/build-wheels.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v3
         with:
           name: wheels
           path: wheelhouse
@@ -69,7 +69,7 @@ jobs:
           maturin build --release --strip --target universal2-apple-darwin
           python3 -m pip install kmedoids --no-index --find-links target/wheels
           cd tests && python3 -m unittest discover && cd ..
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v3
         with:
           name: wheels
           path: target/wheels
@@ -95,7 +95,7 @@ jobs:
           maturin build --release --strip
           python -m pip install kmedoids --no-index --find-links target/wheels
           cd tests && python -m unittest discover && cd ..
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v3
         with:
           name: wheels
           path: target/wheels
@@ -107,7 +107,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Collect artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: wheels
           path: wheels/
