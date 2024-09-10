@@ -1,9 +1,7 @@
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
-use numpy::{PyArray1, PyReadonlyArray1, PyReadonlyArray2};
+use numpy::{PyArray1, PyReadonlyArray1, PyReadonlyArray2, PyArrayMethods, PyUntypedArrayMethods};
 use rand::{rngs::StdRng, SeedableRng};
-use rayon;
-use rustkmedoids;
 
 macro_rules! variant_call {
 ($name:ident, $variant:ident, $type: ty, $ltype: ty) => {
@@ -24,7 +22,7 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, m
     let mut meds = meds.to_vec()?;
     let (loss, assi, n_iter, n_swap): ($ltype, _, _, _) = rustkmedoids::$variant(&dist.as_array(), &mut meds, max_iter);
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).to_object(py))
+      Ok((loss, PyArray1::from_vec_bound(py, assi), PyArray1::from_vec_bound(py, meds), n_iter, n_swap).to_object(py))
     })
 }
 }}
@@ -71,7 +69,7 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, m
     let mut rnd = StdRng::seed_from_u64(seed);
     let (loss, assi, n_iter, n_swap): ($ltype, _, _, _) = rustkmedoids::$variant(&dist.as_array(), &mut meds, max_iter, &mut rnd);
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).to_object(py))
+      Ok((loss, PyArray1::from_vec_bound(py, assi), PyArray1::from_vec_bound(py, meds), n_iter, n_swap).to_object(py))
     })
 }
 }}
@@ -108,7 +106,7 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, m
         rustkmedoids::$variant(&dist, &mut meds, max_iter, &mut rnd)
     });
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).to_object(py))
+      Ok((loss, PyArray1::from_vec_bound(py, assi), PyArray1::from_vec_bound(py, meds), n_iter, n_swap).to_object(py))
     })
 }
 }}
@@ -133,7 +131,7 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, k: usize) -> PyResult<Py<PyAny>> {
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let (loss, assi, meds): ($ltype, _, _) = rustkmedoids::pam_build(&dist.as_array(), k);
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), 1).to_object(py))
+      Ok((loss, PyArray1::from_vec_bound(py, assi), PyArray1::from_vec_bound(py, meds), 1).to_object(py))
     })
 }
 }}
@@ -161,7 +159,7 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, m
     let mut meds = meds.to_vec()?;
     let (loss, assi, n_iter): ($ltype, _, _) = rustkmedoids::alternating(&dist.as_array(), &mut meds, max_iter);
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter).to_object(py))
+      Ok((loss, PyArray1::from_vec_bound(py, assi), PyArray1::from_vec_bound(py, meds), n_iter).to_object(py))
     })
 }
 }}
@@ -191,7 +189,7 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, m
     let (loss, assi, n_iter, n_swap, best_meds, losses): ($ltype, _, _, _, _, _) = rustkmedoids::dynmsc(&dist.as_array(), &mut meds, minimum_k, max_iter);
     let bestk = best_meds.len();
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, best_meds), bestk, PyArray1::from_vec(py, losses), (minimum_k..maxk).collect::<Vec<usize>>(), n_iter, n_swap).to_object(py))
+      Ok((loss, PyArray1::from_vec_bound(py, assi), PyArray1::from_vec_bound(py, best_meds), bestk, PyArray1::from_vec_bound(py, losses), (minimum_k..maxk).collect::<Vec<usize>>(), n_iter, n_swap).to_object(py))
     })
 }
 }}
@@ -216,7 +214,7 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, assi: PyReadonlyArray1<'_, usize>, s
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let (sil, sils): (f64, _) = rustkmedoids::silhouette(&dist.as_array(), &assi.to_vec()?, samples);
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((sil, PyArray1::from_vec(py, sils)).to_object(py))
+      Ok((sil, PyArray1::from_vec_bound(py, sils)).to_object(py))
     })
 }
 }}
@@ -271,7 +269,7 @@ fn $name(dist: PyReadonlyArray2<'_, $type>, meds: PyReadonlyArray1<'_, usize>, s
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let (sil, sils): (f64, _) = rustkmedoids::medoid_silhouette(&dist.as_array(), &meds.to_vec()?, samples);
     Python::with_gil(|py| -> PyResult<Py<PyAny>> {
-      Ok((sil, PyArray1::from_vec(py, sils)).to_object(py))
+      Ok((sil, PyArray1::from_vec_bound(py, sils)).to_object(py))
     })
 }
 }}
@@ -282,7 +280,7 @@ medoid_silhouette_call!(medoid_silhouette_i32, i32);
 
 #[pymodule]
 #[allow(unused_variables)]
-fn kmedoids(py: Python, m: &PyModule) -> PyResult<()> {
+fn kmedoids(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("_fasterpam_f32", wrap_pyfunction!(fasterpam_f32, m)?)?;
     m.add("_fasterpam_f64", wrap_pyfunction!(fasterpam_f64, m)?)?;
     m.add("_fasterpam_i32", wrap_pyfunction!(fasterpam_i32, m)?)?;
@@ -335,4 +333,3 @@ fn kmedoids(py: Python, m: &PyModule) -> PyResult<()> {
     // not supported: m.add("_medoid_silhouette_i64", wrap_pyfunction!(medoid_silhouette_i64, m)?)?;
     Ok(())
 }
-

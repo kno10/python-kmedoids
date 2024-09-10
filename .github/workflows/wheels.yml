@@ -12,15 +12,16 @@ jobs:
     strategy:
       matrix:
         container:
+          - "quay.io/pypa/musllinux_1_2_x86_64"
           - "quay.io/pypa/manylinux2014_x86_64"
           - "quay.io/pypa/manylinux_2_28_x86_64"
     container: ${{ matrix.container }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build wheels
         run: |
           bash .github/workflows/build-wheels.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: wheels
           path: wheelhouse
@@ -31,17 +32,18 @@ jobs:
     strategy:
       matrix:
         container:
+          - "quay.io/pypa/musllinux_1_2_aarch64"
           - "quay.io/pypa/manylinux2014_aarch64"
           - "quay.io/pypa/manylinux_2_28_aarch64"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install QEMU
         run: |
           docker run --privileged --rm tonistiigi/binfmt --install arm64
       - name: Build wheels
         run: |
           docker run --platform linux/arm64 --workdir /src -v ${PWD}:/src ${{ matrix.container }} /bin/bash .github/workflows/build-wheels.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: wheels
           path: wheelhouse
@@ -51,9 +53,9 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -68,7 +70,7 @@ jobs:
           maturin build --release --strip --target universal2-apple-darwin
           python3 -m pip install kmedoids --no-index --find-links target/wheels
           cd tests && python3 -m unittest discover && cd ..
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: wheels
           path: target/wheels
@@ -78,9 +80,9 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -94,7 +96,7 @@ jobs:
           maturin build --release --strip
           python -m pip install kmedoids --no-index --find-links target/wheels
           cd tests && python -m unittest discover && cd ..
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: wheels
           path: target/wheels
@@ -106,7 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Collect artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: wheels
           path: wheels/

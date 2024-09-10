@@ -2,6 +2,12 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.5.2 (2024-09-10)
+
+- fix clippy warnings
+- update to pyo3 0.21, numpy 0.21
+- update github action for python 3.13 and musllinux
+
 ## kmedoids 0.5.1 (2024-03-14)
 
 - DynMSC: best loss reported incorrectly if best k=2
