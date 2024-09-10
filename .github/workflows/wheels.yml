@@ -8,7 +8,7 @@ on:
 
 jobs:
   linux-x86-wheels:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         container:
@@ -28,7 +28,7 @@ jobs:
           if-no-files-found: error
 
   linux-aarch-wheels:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         container:
@@ -60,11 +60,12 @@ jobs:
         with:
           toolchain: stable
           default: true
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Build wheels
         run: |
+          rustup target add x86_64-apple-darwin
           rustup target add aarch64-apple-darwin
           python3 -m pip install -r requirements.txt -r requirements-dev.txt
           maturin build --release --strip --target universal2-apple-darwin
@@ -87,7 +88,7 @@ jobs:
         with:
           toolchain: stable
           default: true
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Build wheels
