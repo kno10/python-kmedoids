@@ -27,7 +27,7 @@ jobs:
           if-no-files-found: error
 
   linux-aarch-wheels:
-    runs-on: ubuntu-lates
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         container:
