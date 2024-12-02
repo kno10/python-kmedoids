@@ -1,7 +1,7 @@
 [package]
 edition = "2021"
 name = "kmedoids"
-version = "0.5.2"
+version = "0.5.3"
 authors = ["Erich Schubert <erich.schubert@tu-dortmund.de>", "Lars Lenssen <lars.lenssen@tu-dortmund.de>"]
 description = "k-Medoids clustering with the FasterPAM algorithm"
 homepage = "https://github.com/kno10/python-kmedoids"
@@ -14,13 +14,13 @@ name = "kmedoids"
 crate-type = ["cdylib"]
 
 [dependencies]
-rustkmedoids = { version = "0.5.2", package = "kmedoids", git = "https://github.com/kno10/rust-kmedoids" }
-numpy = "0.21"
-ndarray = "0.15"
+rustkmedoids = { version = "0.5.3", package = "kmedoids", git = "https://github.com/kno10/rust-kmedoids" }
+numpy = "0.23"
+ndarray = "0.16"
 rand = "0.8"
 rayon = "1.10"
 
 [dependencies.pyo3]
-version = "^0.21"
+version = "^0.23"
 features = ["extension-module"]
 

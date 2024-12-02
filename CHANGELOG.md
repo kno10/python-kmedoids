@@ -2,6 +2,12 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.5.3 (2024-12-02)
+
+- no functionality changes
+- numpy 2.0 and Python 3.13 compatibility
+- update to pyo3 0.23, numpy 0.23
+
 ## kmedoids 0.5.2 (2024-09-10)
 
 - fix clippy warnings

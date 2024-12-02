@@ -10,8 +10,8 @@ authors:
 title: "Fast k-medoids Clustering in Rust and Python"
 journal: "J. Open Source Softw."
 doi: 10.21105/joss.04183
-version: 0.5.2
-date-released: 2024-09-10
+version: 0.5.3
+date-released: 2024-12-02
 license: GPL-3.0
 preferred-citation:
   title: "Fast k-medoids Clustering in Rust and Python"
