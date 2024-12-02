@@ -105,6 +105,11 @@ jobs:
     name: Upload wheels to PyPI
     needs: [linux-x86-wheels, linux-aarch-wheels, osx-wheels, windows-wheels]
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/kmedoids
+    permissions:
+      id-token: write
     steps:
       - name: Collect artifacts
         uses: actions/download-artifact@v3
@@ -117,8 +122,6 @@ jobs:
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}
           packages_dir: wheels/
           skip_existing: true
           verbose: true
