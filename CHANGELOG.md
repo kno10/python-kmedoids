@@ -2,6 +2,11 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.5.3.1 (2024-12-09)
+
+- no changes, but rebuild binary packages because of compile issue
+  issue in PyO3 <https://github.com/PyO3/pyo3/issues/4757>
+
 ## kmedoids 0.5.3 (2024-12-02)
 
 - no functionality changes
