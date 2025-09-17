@@ -2,6 +2,13 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.5.4 (2025-09-17)
+
+- no functionality changes
+- update Rust edition, rand, rayon
+- Python 3.14 compatibility
+- update to pyo3 0.26, numpy 0.26
+
 ## kmedoids 0.5.3.1 (2024-12-09)
 
 - no changes, but rebuild binary packages because of compile issue

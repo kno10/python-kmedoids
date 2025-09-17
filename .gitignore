@@ -1,1 +1,6 @@
 /target
+/build
+/tests/__pycache__
+/kmedoids/__pycache__
+/kmedoids/*.so
+/Cargo.lock

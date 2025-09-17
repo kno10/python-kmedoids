@@ -22,7 +22,7 @@ fn $name<'py>(dist: PyReadonlyArray2<'py, $type>, meds: PyReadonlyArray1<'py, us
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let mut meds = meds.to_vec()?;
     let (loss, assi, n_iter, n_swap): ($ltype, _, _, _) = rustkmedoids::$variant(&dist.as_array(), &mut meds, max_iter);
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).into_pyobject(py)?.unbind())
     })
 }
@@ -69,7 +69,7 @@ fn $name<'py>(dist: PyReadonlyArray2<'py, $type>, meds: PyReadonlyArray1<'py, us
     let mut meds = meds.to_vec()?;
     let mut rnd = StdRng::seed_from_u64(seed);
     let (loss, assi, n_iter, n_swap): ($ltype, _, _, _) = rustkmedoids::$variant(&dist.as_array(), &mut meds, max_iter, &mut rnd);
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).into_pyobject(py)?.unbind())
     })
 }
@@ -106,7 +106,7 @@ fn $name<'py>(dist: PyReadonlyArray2<'py, $type>, meds: PyReadonlyArray1<'py, us
         let mut rnd = StdRng::seed_from_u64(seed);
         rustkmedoids::$variant(&dist, &mut meds, max_iter, &mut rnd)
     });
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter, n_swap).into_pyobject(py)?.unbind())
     })
 }
@@ -131,7 +131,7 @@ fn $name<'py>(dist: PyReadonlyArray2<'py, $type>, k: usize) -> PyResult<Py<PyTup
     assert_eq!(dist.ndim(), 2);
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let (loss, assi, meds): ($ltype, _, _) = rustkmedoids::pam_build(&dist.as_array(), k);
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), 1).into_pyobject(py)?.unbind())
     })
 }
@@ -159,7 +159,7 @@ fn $name<'py>(dist: PyReadonlyArray2<'py, $type>, meds: PyReadonlyArray1<'py, us
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let mut meds = meds.to_vec()?;
     let (loss, assi, n_iter): ($ltype, _, _) = rustkmedoids::alternating(&dist.as_array(), &mut meds, max_iter);
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, meds), n_iter).into_pyobject(py)?.unbind())
     })
 }
@@ -189,7 +189,7 @@ fn $name<'py>(dist: PyReadonlyArray2<'py, $type>, meds: PyReadonlyArray1<'py, us
     let maxk = meds.len() + 1;
     let (loss, assi, n_iter, n_swap, best_meds, losses): ($ltype, _, _, _, _, _) = rustkmedoids::dynmsc(&dist.as_array(), &mut meds, minimum_k, max_iter);
     let bestk = best_meds.len();
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         Ok((loss, PyArray1::from_vec(py, assi), PyArray1::from_vec(py, best_meds), bestk, PyArray1::from_vec(py, losses), PyArray1::from_vec(py, (minimum_k..maxk).collect::<Vec<usize>>()), n_iter, n_swap).into_pyobject(py)?.unbind())
     })
 }
@@ -214,7 +214,7 @@ fn $name<'py>(dist: PyReadonlyArray2<'py, $type>, assi: PyReadonlyArray1<'py, us
     assert_eq!(dist.ndim(), 2);
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let (sil, sils): (f64, _) = rustkmedoids::silhouette(&dist.as_array(), &assi.to_vec()?, samples);
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         Ok((sil, PyArray1::from_vec(py, sils)).into_pyobject(py)?.unbind())
     })
 }
@@ -269,7 +269,7 @@ fn $name<'py>(dist: PyReadonlyArray2<'py, $type>, meds: PyReadonlyArray1<'py, us
     assert_eq!(dist.ndim(), 2);
     assert_eq!(dist.shape()[0], dist.shape()[1]);
     let (sil, sils): (f64, _) = rustkmedoids::medoid_silhouette(&dist.as_array(), &meds.to_vec()?, samples);
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         Ok((sil, PyArray1::from_vec(py, sils)).into_pyobject(py)?.unbind())
     })
 }
@@ -332,5 +332,6 @@ fn kmedoids(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("_medoid_silhouette_f64", wrap_pyfunction!(medoid_silhouette_f64, m)?)?;
     m.add("_medoid_silhouette_i32", wrap_pyfunction!(medoid_silhouette_i32, m)?)?;
     // not supported: m.add("_medoid_silhouette_i64", wrap_pyfunction!(medoid_silhouette_i64, m)?)?;
+    // use m.sum(axis=1).argmin() instead of choose_medoid_within_partition
     Ok(())
 }
