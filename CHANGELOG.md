@@ -2,6 +2,11 @@
 
 For changes to the main Rust package, please see <https://github.com/kno10/rust-kmedoids/blob/main/CHANGELOG.md>
 
+## kmedoids 0.5.5 (2026-05-22)
+
+- no functionality changes
+- update rand, ndarray, numpy, rayon, pyo3
+
 ## kmedoids 0.5.4 (2025-09-17)
 
 - no functionality changes
