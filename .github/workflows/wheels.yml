@@ -17,8 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build wheels
-        run: |
-          bash .github/workflows/build-wheels.sh
+        run: bash .github/workflows/build-wheels.sh
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-linux-many-x86
@@ -35,8 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build wheels
-        run: |
-          bash .github/workflows/build-wheels.sh
+        run: bash .github/workflows/build-wheels.sh
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-linux-musl-x86
@@ -44,19 +42,16 @@ jobs:
           if-no-files-found: error
 
   linux-many-aarch-wheels:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     strategy:
       matrix:
         container:
           - "quay.io/pypa/manylinux_2_28_aarch64"
+    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v4
-      - name: Install QEMU
-        run: |
-          docker run --privileged --rm tonistiigi/binfmt --install arm64
       - name: Build wheels
-        run: |
-          docker run --platform linux/arm64 --workdir /src -v ${PWD}:/src ${{ matrix.container }} /bin/bash .github/workflows/build-wheels.sh
+        run: bash .github/workflows/build-wheels.sh
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-linux-many-aarch
@@ -64,19 +59,17 @@ jobs:
           if-no-files-found: error
 
   linux-musl-aarch-wheels:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     strategy:
       matrix:
         container:
           - "quay.io/pypa/musllinux_1_2_aarch64"
+    container: ${{ matrix.container }}
     steps:
+      - uses: laverdet/alpine-arm64@v1
       - uses: actions/checkout@v4
-      - name: Install QEMU
-        run: |
-          docker run --privileged --rm tonistiigi/binfmt --install arm64
       - name: Build wheels
-        run: |
-          docker run --platform linux/arm64 --workdir /src -v ${PWD}:/src ${{ matrix.container }} /bin/bash .github/workflows/build-wheels.sh
+        run: bash .github/workflows/build-wheels.sh
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-linux-musl-aarch
